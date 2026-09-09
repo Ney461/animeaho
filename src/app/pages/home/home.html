@@ -1,15 +1,16 @@
-<div class="flex w-full">
-  <div class="basis-1/4 min-w-0 self-start sticky top-0">
-    <div class="max-h-dvh overflow-y-auto overflow-x-hidden overscroll-contain">
-      <p class="text-xl font-title text-anime-text px-4 pb-4 pt-4">ANIMES EN EMISIÓN POPULARES</p>
+<div class="flex w-full flex-col lg:flex-row">
+  <div class="w-full min-w-0 self-start lg:sticky lg:top-0 lg:basis-1/4">
+    <p class="text-xl font-title text-anime-text px-4 pb-4 pt-4">ANIMES EN EMISIÓN</p>
+    <div class="overflow-x-auto overflow-y-hidden overscroll-contain lg:max-h-dvh lg:overflow-x-hidden lg:overflow-y-auto">
       <on-air-list></on-air-list>
     </div>
   </div>
-  <div class="divider divider-horizontal divider-info"></div>
-  <div class="w-full">
+  <div class="divider divider-horizontal divider-info my-0 hidden lg:flex"></div>
+  <div class="divider divider-info my-0 flex lg:hidden"></div>
+  <div class="w-full min-w-0">
     <p class="text-xl font-title px-4 pt-4 text-anime-text">ÚLTIMOS EPISODIOS</p>
     <episode-list></episode-list>
-    <p class="text-xl font-title px-4 pt-4 text-anime-text">ÚLTIMOS ANIMES AGREGADOS</p>
+    <p class="text-xl font-title px-4 pt-4 text-anime-text">ÚLTIMOS ANIMES</p>
     <anime-list></anime-list>
   </div>
 </div>
