@@ -1,0 +1,12 @@
+@if (loading()) {
+  <app-spinner></app-spinner>
+} @else {
+  @for (anime of animesOnAirList().animes; track anime.slug) {
+    <a
+      routerLink="/"
+      class="block border-l-4 border-transparent pl-3 py-2 truncate text-anime-text transition-all duration-200 hover:border-anime-cyan hover:text-white hover:translate-x-1 hover:bg-anime-list-hover"
+    >
+    {{ anime.title }}
+    </a>
+  }
+}

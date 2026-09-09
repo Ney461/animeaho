@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+@plugin "daisyui";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+
+  --font-title: "Exo 2", sans-serif;
+
+  --color-anime-navy: #071D42;
+  --color-anime-main-background: #04132E;
+  --color-anime-navy-light: #1e293b;
+  --color-anime-cyan: #22d3ee;
+  --color-anime-blue: #1d4ed8;
+  --color-anime-surface: #152A4D;
+  --color-anime-button: #1A6BC4;
+  --color-anime-button-active: #3392FF;
+  --color-anime-focus: #0D376F;
+  --color-anime-footer: #06296B;
+  --color-anime-text: #7A9CC4;
+  --color-anime-list-hover: #072044;
+}

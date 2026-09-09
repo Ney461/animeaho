@@ -1,0 +1,11 @@
+@if (loading()) {
+  <app-spinner></app-spinner>
+} @else {
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4">
+    @for (episode of lastEpisodesList().episodes; track $index) {
+      <div class="card bg-anime-navy rounded-2xl overflow-hidden w-full shrink-0">
+        <episode-card [episode]="episode"></episode-card>
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,74 @@
+<div class="max-lg:collapse shadow-sm w-full rounded-md px-4 py-3 bg-anime-navy overflow-hidden">
+  <input id="navbar-1-toggle" class="peer hidden" type="checkbox" />
+  <label for="navbar-1-toggle" class="fixed inset-0 hidden max-lg:peer-checked:block"></label>
+
+  <div
+    class="collapse-title navbar flex-col lg:flex-row gap-3 lg:gap-0 lg:justify-between lg:items-center p-0"
+  >
+    <div class="w-full flex justify-center lg:hidden">
+      <button class="btn btn-ghost text-xl">
+        <img class="w-full max-w-40 sm:max-w-48" src="images/logo/logo-animeaho.png" alt="AnimeAho" />
+      </button>
+    </div>
+
+    <div class="hidden lg:flex lg:flex-1">
+      <button class="btn btn-ghost text-xl">
+        <img class="w-full max-w-40 sm:max-w-48" src="images/logo/logo-animeaho.png" alt="AnimeAho" />
+      </button>
+    </div>
+
+    <div class="w-full flex items-center justify-between gap-2 lg:hidden">
+      <label for="navbar-1-toggle" class="btn btn-ghost">
+        <svg
+          aria-label="Menu"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h8m-8 6h16"
+          />
+        </svg>
+      </label>
+      <search-bar class="flex-1"></search-bar>
+    </div>
+
+    <div class="hidden lg:flex lg:justify-center rounded-box border-base-300">
+      <search-bar></search-bar>
+    </div>
+
+    <div class="hidden lg:flex lg:flex-1 lg:justify-end rounded-box border-base-300">
+      <ul class="menu menu-horizontal items-center px-1 font-title font-bold text-[15.2px]">
+        <li>
+          <a
+            routerLink="/home"
+            class="relative after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-full after:bg-anime-cyan after:scale-x-0 after:origin-left after:transition-transform after:duration-200 hover:after:scale-x-100"
+          >
+            INICIO
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLink="/catalog"
+            class="relative after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-full after:bg-anime-cyan after:scale-x-0 after:origin-left after:transition-transform after:duration-200 hover:after:scale-x-100"
+          >
+            CATÁLOGO
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="collapse-content lg:hidden z-1">
+    <ul class="menu font-title font-bold text-[15.2px]">
+      <li><button routerLink="/home">INICIO</button></li>
+      <li><button routerLink="/catalog">CATÁLOGO</button></li>
+    </ul>
+  </div>
+</div>
