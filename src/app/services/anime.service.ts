@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
-import { CatalogResponse } from '../core/models/CatalogResponse';
-import { LastEpisodesResponse } from '../core/models/LastEpisodesResponse';
-import { LastAnimesResponse } from '../core/models/LastAnimesResponse';
+
+import { CatalogResponse } from '@core/models/CatalogResponse';
+import { LastAnimesResponse } from '@core/models/LastAnimesResponse';
+import { LastEpisodesResponse } from '@core/models/LastEpisodesResponse';
+import { environment } from '@environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AnimeService {
 
   private http = inject(HttpClient)
-  private url = 'https://animeav1-backend-no-oficial.vercel.app'
-  // url = 'http://127.0.0.1:8000'
+  private url = environment.apiUrl
 
   getAnimesOnAir(): Observable<CatalogResponse> {
     const page1$ = this.http.get<CatalogResponse>(`${this.url}/catalog?page=1&status=airing&order=popular`);

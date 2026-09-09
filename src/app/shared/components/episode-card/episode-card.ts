@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
-import { Episode } from '../../../core/models/LastEpisodesResponse';
+
+import { Episode } from '@core/models/LastEpisodesResponse';
 
 @Component({
   selector: 'episode-card',
