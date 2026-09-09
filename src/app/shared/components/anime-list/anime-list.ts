@@ -1,11 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
+import { AnimeService } from '../../../services/anime.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
-
-import { LastAnimesResponse } from '@core/models/LastAnimesResponse';
-import { AnimeService } from '@services/anime.service';
-import { AnimeCard } from '@shared/components/anime-card/anime-card';
-import { Spinner } from '@shared/components/spinner/spinner';
+import { LastAnimesResponse } from '../../../core/models/LastAnimesResponse';
+import { Spinner } from "../spinner/spinner";
+import { AnimeCard } from "../anime-card/anime-card";
 
 @Component({
   selector: 'anime-list',

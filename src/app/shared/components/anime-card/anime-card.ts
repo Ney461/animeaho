@@ -1,6 +1,5 @@
 import { Component, input } from '@angular/core';
-
-import { Anime } from '@core/models/LastAnimesResponse';
+import { Anime, LastAnimesResponse } from '../../../core/models/LastAnimesResponse';
 
 @Component({
   selector: 'anime-card',
