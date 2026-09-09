@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { EpisodeCard } from "../episode-card/episode-card";
-import { AnimeService } from '../../../services/anime.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { LastEpisodesResponse } from '../../../core/models/LastEpisodesResponse';
 import { finalize } from 'rxjs';
-import { Spinner } from '../spinner/spinner';
+
+import { LastEpisodesResponse } from '@core/models/LastEpisodesResponse';
+import { AnimeService } from '@services/anime.service';
+import { EpisodeCard } from '@shared/components/episode-card/episode-card';
+import { Spinner } from '@shared/components/spinner/spinner';
 
 @Component({
   selector: 'episode-list',
