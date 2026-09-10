@@ -11,14 +11,71 @@
 
   --color-anime-navy: #071D42;
   --color-anime-main-background: #04132E;
-  --color-anime-navy-light: #1e293b;
   --color-anime-cyan: #22d3ee;
-  --color-anime-blue: #1d4ed8;
   --color-anime-surface: #152A4D;
   --color-anime-button: #1A6BC4;
+  --color-anime-options: #144F91;
   --color-anime-button-active: #3392FF;
   --color-anime-focus: #0D376F;
   --color-anime-footer: #06296B;
   --color-anime-text: #7A9CC4;
   --color-anime-list-hover: #072044;
+}
+
+@media (min-width: 64rem) {
+  .genre-dropdown {
+    width: 36rem;
+  }
+
+  .genre-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+
+  .status-dropdown {
+    width: 100%;
+  }
+
+  .status-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 0.5rem;
+  }
+
+  .type-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+
+  @media (min-width: 80rem) {
+    .genre-dropdown {
+      width: 52rem;
+    }
+
+    .genre-options {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 79.99rem) {
+    .status-dropdown {
+      width: 100%;
+    }
+
+    .status-options {
+      display: block;
+    }
+  }
+
+  @media (min-width: 96rem) {
+    .genre-dropdown {
+      width: 70rem;
+    }
+
+    .genre-options {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
 }

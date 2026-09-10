@@ -1,0 +1,93 @@
+@if (variant() === 'dropdown') {
+  <div class="dropdown w-full " [class.dropdown-top]="dropdownTop()">
+    <div tabindex="0" role="button" class="btn btn-sm w-full bg-anime-options">
+      {{ filterLabel() }}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 16 16"
+        class="transition-transform duration-200 [.dropdown:focus-within_&]:rotate-180"
+      >
+        <path d="M0 0h16v16H0z" fill="none" />
+        <path
+          fill="currentColor"
+          d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+        />
+      </svg>
+    </div>
+    <ul
+      tabindex="0"
+      class="dropdown-content w-full menu bg-anime-surface rounded-box z-10 p-2 shadow-sm"
+      [class.genre-dropdown]="filterLabel() === 'Género'"
+      [class.status-dropdown]="filterLabel() === 'Estado'"
+    >
+      @if (filterLabel() == 'Estado') {
+        <ng-container *ngTemplateOutlet="listaOpcionesUnicas"></ng-container>
+      } @else {
+        <ng-container *ngTemplateOutlet="listaOpcionesMultiples"></ng-container>
+      }
+    </ul>
+  </div>
+} @else {
+  <div class="collapse collapse-arrow bg-anime-options">
+    <input
+      type="checkbox"
+      [checked]="expanded()"
+      (change)="onExpansionChange($event)"
+    />
+    <div class="collapse-title font-semibold">{{ filterLabel() }}</div>
+    <div class="collapse-content">
+      @if (filterLabel() == 'Estado') {
+        <ng-container *ngTemplateOutlet="listaOpcionesUnicas"></ng-container>
+      } @else {
+        <ng-container *ngTemplateOutlet="listaOpcionesMultiples"></ng-container>
+      }
+    </div>
+  </div>
+}
+
+<ng-template #listaOpcionesMultiples>
+  <ul
+    class="menu p-0 bg-anime-surface w-full rounded-xl"
+    [class.genre-options]="filterLabel() === 'Género' && variant() === 'dropdown'"
+    [class.type-options]="filterLabel() === 'Tipo' && variant() === 'dropdown'"
+  >
+    @for (option of options(); track $index) {
+      <li>
+        <label class="flex items-center gap-2 cursor-pointer whitespace-nowrap">
+          <input
+            type="checkbox"
+            [value]="option"
+            class="checkbox checkbox-sm"
+            (change)="toggleOption(option, $event)"
+          />
+          {{ formatOptionLabel(option) }}
+        </label>
+      </li>
+    }
+  </ul>
+</ng-template>
+
+<ng-template #listaOpcionesUnicas>
+  <ul
+    class="menu p-0 bg-anime-surface w-full rounded-xl"
+    [class.status-options]="filterLabel() === 'Estado' && variant() === 'dropdown'"
+  >
+    @for (option of options(); track $index) {
+      <li>
+        <label class="flex items-center gap-2 cursor-pointer whitespace-nowrap">
+          <input
+            type="radio"
+            [name]="filterLabel()"
+            [value]="option"
+            [checked]="option === selectedOption()"
+            class="radio"
+            (change)="selectSingleOption(option)"
+          />
+          {{ formatOptionLabel(option) }}
+        </label>
+      </li>
+    }
+  </ul>
+</ng-template>

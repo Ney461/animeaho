@@ -13,11 +13,11 @@ import { Spinner } from '@shared/components/spinner/spinner';
   templateUrl: './anime-list.html',
 })
 export class AnimeList {
-  animeService = inject(AnimeService)
-  loading = signal(true);
+  private readonly animeService = inject(AnimeService);
+  readonly loading = signal(true);
 
-  lastAnimesList = toSignal(
+  readonly animeResponse = toSignal(
     this.animeService.getLastAnimes().pipe(finalize(() => this.loading.set(false))),
-    { initialValue: { episodes: [] } as Partial<LastAnimesResponse> as LastAnimesResponse }
-  )
+    { initialValue: { animes: [] } as LastAnimesResponse }
+  );
 }

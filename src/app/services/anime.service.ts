@@ -6,33 +6,38 @@ import { CatalogResponse } from '@core/models/CatalogResponse';
 import { LastAnimesResponse } from '@core/models/LastAnimesResponse';
 import { LastEpisodesResponse } from '@core/models/LastEpisodesResponse';
 import { environment } from '@environments/environment';
+import { CatalogOptionsResponse } from '@core/models/CatalogOptionsResponse';
 
 @Injectable({ providedIn: 'root' })
 export class AnimeService {
 
-  private http = inject(HttpClient)
-  private url = environment.apiUrl
+  private readonly httpClient = inject(HttpClient);
+  private readonly apiUrl = environment.apiUrl;
 
   getAnimesOnAir(): Observable<CatalogResponse> {
-    const page1$ = this.http.get<CatalogResponse>(`${this.url}/catalog?page=1&status=airing&order=popular`);
-    const page2$ = this.http.get<CatalogResponse>(`${this.url}/catalog?page=2&status=airing&order=popular`);
-    const page3$ = this.http.get<CatalogResponse>(`${this.url}/catalog?page=3&status=airing&order=popular`);
+    const firstPage$ = this.httpClient.get<CatalogResponse>(`${this.apiUrl}/catalog?page=1&status=airing&order=popular`);
+    const secondPage$ = this.httpClient.get<CatalogResponse>(`${this.apiUrl}/catalog?page=2&status=airing&order=popular`);
+    const thirdPage$ = this.httpClient.get<CatalogResponse>(`${this.apiUrl}/catalog?page=3&status=airing&order=popular`);
 
-    return forkJoin([page1$, page2$, page3$]).pipe(
-      map(([res1, res2, res3]) =>({
-        ...res1,
-        animes: [...res1.animes, ...res2.animes, ...res3.animes],
-        total_pages: res3.total_pages
+    return forkJoin([firstPage$, secondPage$, thirdPage$]).pipe(
+      map(([firstPage, secondPage, thirdPage]) => ({
+        ...firstPage,
+        animes: [...firstPage.animes, ...secondPage.animes, ...thirdPage.animes],
+        total_pages: thirdPage.total_pages,
       }))
-    )
+    );
   }
 
   getLastEpisodes(): Observable<LastEpisodesResponse> {
-    return this.http.get<LastEpisodesResponse>(`${this.url}/episodes`)
+    return this.httpClient.get<LastEpisodesResponse>(`${this.apiUrl}/episodes`);
   }
 
   getLastAnimes(): Observable<LastAnimesResponse> {
-    return this.http.get<LastAnimesResponse>(`${this.url}/animes`)
+    return this.httpClient.get<LastAnimesResponse>(`${this.apiUrl}/animes`);
+  }
+
+  getCatalogOptions(): Observable<CatalogOptionsResponse> {
+    return this.httpClient.get<CatalogOptionsResponse>(`${this.apiUrl}/catalog/options`);
   }
 
 }
