@@ -40,4 +40,8 @@ export class AnimeService {
     return this.httpClient.get<CatalogOptionsResponse>(`${this.apiUrl}/catalog/options`);
   }
 
+  getFilteredAnimeResults(): Observable<CatalogResponse> {
+    return this.httpClient.get<CatalogResponse>(`${this.apiUrl}/catalog`)
+  }
+
 }

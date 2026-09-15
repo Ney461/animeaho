@@ -1,6 +1,10 @@
 @if (variant() === 'dropdown') {
-  <div class="dropdown w-full " [class.dropdown-top]="dropdownTop()">
-    <div tabindex="0" role="button" class="btn btn-sm w-full bg-anime-options">
+  <div class="dropdown w-full" [class.dropdown-top]="dropdownTop()">
+    <div
+      tabindex="0"
+      role="button"
+      class="btn btn-sm w-full bg-anime-options [.dropdown:focus-within_&]:bg-anime-button-active"
+    >
       {{ filterLabel() }}
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -18,14 +22,15 @@
     </div>
     <ul
       tabindex="0"
-      class="dropdown-content w-full menu bg-anime-surface rounded-box z-10 p-2 shadow-sm"
-      [class.genre-dropdown]="filterLabel() === 'Género'"
-      [class.status-dropdown]="filterLabel() === 'Estado'"
+      class="dropdown-content menu bg-anime-surface rounded-box z-10 p-2 shadow-sm"
+      [ngClass]="filterLabel() === 'Género'
+        ? 'w-[36rem] min-[80rem]:w-[52rem] min-[96rem]:w-[70rem]'
+        : 'w-full'"
     >
-      @if (filterLabel() == 'Estado') {
-        <ng-container *ngTemplateOutlet="listaOpcionesUnicas"></ng-container>
+      @if (filterLabel() == 'Estado' || filterLabel() == 'Orden') {
+        <ng-container *ngTemplateOutlet="onlyOptionList"></ng-container>
       } @else {
-        <ng-container *ngTemplateOutlet="listaOpcionesMultiples"></ng-container>
+        <ng-container *ngTemplateOutlet="multiplesOptionsList"></ng-container>
       }
     </ul>
   </div>
@@ -38,28 +43,29 @@
     />
     <div class="collapse-title font-semibold">{{ filterLabel() }}</div>
     <div class="collapse-content">
-      @if (filterLabel() == 'Estado') {
-        <ng-container *ngTemplateOutlet="listaOpcionesUnicas"></ng-container>
+      @if (filterLabel() == 'Estado' || filterLabel() == 'Orden') {
+        <ng-container *ngTemplateOutlet="onlyOptionList"></ng-container>
       } @else {
-        <ng-container *ngTemplateOutlet="listaOpcionesMultiples"></ng-container>
+        <ng-container *ngTemplateOutlet="multiplesOptionsList"></ng-container>
       }
     </div>
   </div>
 }
 
-<ng-template #listaOpcionesMultiples>
+<ng-template #multiplesOptionsList>
   <ul
-    class="menu p-0 bg-anime-surface w-full rounded-xl"
-    [class.genre-options]="filterLabel() === 'Género' && variant() === 'dropdown'"
-    [class.type-options]="filterLabel() === 'Tipo' && variant() === 'dropdown'"
+    class="menu grid grid-cols-1 p-0 bg-anime-surface w-full rounded-xl"
+    [ngClass]="filterLabel() === 'Género'
+      ? 'min-[64rem]:grid-cols-3 min-[80rem]:grid-cols-4 min-[96rem]:grid-cols-6 gap-x-4'
+      : ''"
   >
     @for (option of options(); track $index) {
       <li>
         <label class="flex items-center gap-2 cursor-pointer whitespace-nowrap">
           <input
             type="checkbox"
-            [value]="option"
             class="checkbox checkbox-sm"
+            [checked]="isChecked(option)"
             (change)="toggleOption(option, $event)"
           />
           {{ formatOptionLabel(option) }}
@@ -69,10 +75,9 @@
   </ul>
 </ng-template>
 
-<ng-template #listaOpcionesUnicas>
+<ng-template #onlyOptionList>
   <ul
-    class="menu p-0 bg-anime-surface w-full rounded-xl"
-    [class.status-options]="filterLabel() === 'Estado' && variant() === 'dropdown'"
+    class="menu grid grid-cols-1 p-0 bg-anime-surface w-full rounded-xl"
   >
     @for (option of options(); track $index) {
       <li>
@@ -80,9 +85,8 @@
           <input
             type="radio"
             [name]="filterLabel()"
-            [value]="option"
-            [checked]="option === selectedOption()"
             class="radio"
+            [checked]="isChecked(option)"
             (change)="selectSingleOption(option)"
           />
           {{ formatOptionLabel(option) }}

@@ -6,4 +6,8 @@ import { FilterBar } from "@shared/components/filter-bar/filter-bar";
   imports: [FilterBar],
   templateUrl: './catalog.html',
 })
-export class Catalog {}
+export class Catalog {
+
+  
+
+}

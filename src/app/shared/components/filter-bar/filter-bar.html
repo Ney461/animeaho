@@ -1,43 +1,75 @@
-<!-- Desktop -->
-<div class="hidden lg:grid grid-cols-4 gap-2 place-items-center">
-  <filter-option filterLabel="Tipo" [options]="options()?.types ?? []" variant="dropdown" />
-  <filter-option filterLabel="Género" [options]="options()?.genres ?? []" variant="dropdown" />
-  <filter-option filterLabel="Estado" [options]="options()?.statuses ?? []" variant="dropdown" />
-  <a class="btn btn-sm w-full bg-anime-button">Filtrar</a>
-</div>
+<form [formGroup]="filtersForm">
+  <!-- Desktop -->
+  <div class="hidden lg:grid grid-cols-5 gap-2 place-items-center">
+    <filter-options
+      formControlName="tipo"
+      filterLabel="Tipo"
+      [options]="options()?.types ?? []"
+      variant="dropdown"
+    />
+    <filter-options
+      formControlName="genero"
+      filterLabel="Género"
+      [options]="options()?.genres ?? []"
+      variant="dropdown"
+    />
+    <filter-options
+      formControlName="estado"
+      filterLabel="Estado"
+      [options]="options()?.statuses ?? []"
+      variant="dropdown"
+    />
+    <filter-options
+      formControlName="orden"
+      filterLabel="Orden"
+      [options]="options()?.orders ?? []"
+      variant="dropdown"
+    />
+    <a class="btn btn-sm w-full bg-anime-button" (click)="applyFilters()">Filtrar </a>
+  </div>
 
-<!-- Mobile -->
-<div class="lg:hidden">
-  <button class="btn w-full m-1 bg-anime-button" (click)="modalFiltros.showModal()">Filtros</button>
-  <dialog #modalFiltros class="modal modal-bottom">
-    <div class="modal-box pt-12 bg-anime-surface">
-      <form method="dialog">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 ">✕</button>
-      </form>
-      <div class="flex flex-col gap-2">
-        <filter-option
-          filterLabel="Tipo"
-          [options]="options()?.types ?? []"
-          variant="collapse"
-          [expanded]="activeMobileFilter() === 'Tipo'"
-          (expandedChange)="onMobileFilterExpansionChange('Tipo', $event)"
-        />
-        <filter-option
-          filterLabel="Género"
-          [options]="options()?.genres ?? []"
-          variant="collapse"
-          [expanded]="activeMobileFilter() === 'Género'"
-          (expandedChange)="onMobileFilterExpansionChange('Género', $event)"
-        />
-        <filter-option
-          filterLabel="Estado"
-          [options]="options()?.statuses ?? []"
-          variant="collapse"
-          [expanded]="activeMobileFilter() === 'Estado'"
-          (expandedChange)="onMobileFilterExpansionChange('Estado', $event)"
-        />
-        <a class="btn bg-anime-button">Filtrar</a>
+  <!-- Mobile -->
+  <div class="lg:hidden">
+    <button class="btn w-full m-1 bg-anime-button" (click)="modalFiltros.showModal()">
+      Filtros
+    </button>
+    <dialog #modalFiltros class="modal modal-bottom">
+      <div class="modal-box pt-12 bg-anime-surface">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <div class="flex flex-col gap-2">
+          <filter-options
+            filterLabel="Tipo"
+            [options]="options()?.types ?? []"
+            variant="collapse"
+            [expanded]="activeMobileFilter() === 'Tipo'"
+            (expandedChange)="onMobileFilterExpansionChange('Tipo', $event)"
+          />
+          <filter-options
+            filterLabel="Género"
+            [options]="options()?.genres ?? []"
+            variant="collapse"
+            [expanded]="activeMobileFilter() === 'Género'"
+            (expandedChange)="onMobileFilterExpansionChange('Género', $event)"
+          />
+          <filter-options
+            filterLabel="Estado"
+            [options]="options()?.statuses ?? []"
+            variant="collapse"
+            [expanded]="activeMobileFilter() === 'Estado'"
+            (expandedChange)="onMobileFilterExpansionChange('Estado', $event)"
+          />
+          <filter-options
+            filterLabel="Orden"
+            [options]="options()?.orders ?? []"
+            variant="collapse"
+            [expanded]="activeMobileFilter() === 'Orden'"
+            (expandedChange)="onMobileFilterExpansionChange('Orden', $event)"
+          />
+          <a class="btn bg-anime-button" (click)="applyFilters()">Filtrar</a>
+        </div>
       </div>
-    </div>
-  </dialog>
-</div>
+    </dialog>
+  </div>
+</form>
