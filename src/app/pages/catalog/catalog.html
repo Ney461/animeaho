@@ -1,3 +1,10 @@
-<div class="m-5">
-  <filter-bar></filter-bar>
+<div class="mx-5 flex flex-1 flex-col">
+
+  <filter-bar (selectedFilters)="catchFilters($event)"></filter-bar>
+
+  <div>
+
+  </div>
+
+  <pagination totalPages="30" class="mt-auto py-5"></pagination>
 </div>

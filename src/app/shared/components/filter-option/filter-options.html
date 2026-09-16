@@ -24,7 +24,7 @@
       tabindex="0"
       class="dropdown-content menu bg-anime-surface rounded-box z-10 p-2 shadow-sm"
       [ngClass]="filterLabel() === 'Género'
-        ? 'w-[36rem] min-[80rem]:w-[52rem] min-[96rem]:w-[70rem]'
+        ? 'w-xl xl:w-208 2xl:w-280'
         : 'w-full'"
     >
       @if (filterLabel() == 'Estado' || filterLabel() == 'Orden') {
@@ -56,7 +56,7 @@
   <ul
     class="menu grid grid-cols-1 p-0 bg-anime-surface w-full rounded-xl"
     [ngClass]="filterLabel() === 'Género'
-      ? 'min-[64rem]:grid-cols-3 min-[80rem]:grid-cols-4 min-[96rem]:grid-cols-6 gap-x-4'
+      ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-x-4'
       : ''"
   >
     @for (option of options(); track $index) {
@@ -84,7 +84,7 @@
         <label class="flex items-center gap-2 cursor-pointer whitespace-nowrap">
           <input
             type="radio"
-            [name]="filterLabel()"
+            [name]="filterLabel() + '-' + variant()"
             class="radio"
             [checked]="isChecked(option)"
             (change)="selectSingleOption(option)"

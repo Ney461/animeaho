@@ -17,15 +17,17 @@
       formControlName="estado"
       filterLabel="Estado"
       [options]="options()?.statuses ?? []"
+      defaultOption="finished"
       variant="dropdown"
     />
     <filter-options
       formControlName="orden"
       filterLabel="Orden"
       [options]="options()?.orders ?? []"
+      defaultOption="default"
       variant="dropdown"
     />
-    <a class="btn btn-sm w-full bg-anime-button" (click)="applyFilters()">Filtrar </a>
+    <a class="btn btn-sm w-full bg-anime-button" (click)="sendFilters()">Filtrar </a>
   </div>
 
   <!-- Mobile -->
@@ -40,6 +42,7 @@
         </form>
         <div class="flex flex-col gap-2">
           <filter-options
+            formControlName="tipo"
             filterLabel="Tipo"
             [options]="options()?.types ?? []"
             variant="collapse"
@@ -47,6 +50,7 @@
             (expandedChange)="onMobileFilterExpansionChange('Tipo', $event)"
           />
           <filter-options
+            formControlName="genero"
             filterLabel="Género"
             [options]="options()?.genres ?? []"
             variant="collapse"
@@ -54,20 +58,24 @@
             (expandedChange)="onMobileFilterExpansionChange('Género', $event)"
           />
           <filter-options
+            formControlName="estado"
             filterLabel="Estado"
             [options]="options()?.statuses ?? []"
+            defaultOption="finished"
             variant="collapse"
             [expanded]="activeMobileFilter() === 'Estado'"
             (expandedChange)="onMobileFilterExpansionChange('Estado', $event)"
           />
           <filter-options
+            formControlName="orden"
             filterLabel="Orden"
             [options]="options()?.orders ?? []"
+            defaultOption="default"
             variant="collapse"
             [expanded]="activeMobileFilter() === 'Orden'"
             (expandedChange)="onMobileFilterExpansionChange('Orden', $event)"
           />
-          <a class="btn bg-anime-button" (click)="applyFilters()">Filtrar</a>
+          <a class="btn bg-anime-button" (click)="sendFilters()">Filtrar</a>
         </div>
       </div>
     </dialog>

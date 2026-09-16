@@ -26,6 +26,7 @@ export class FilterOptions implements ControlValueAccessor {
   filterLabel = input.required<string>();
   options = input.required<string[]>();
   variant = input<'dropdown' | 'collapse'>('dropdown');
+  defaultOption = input<string | null>(null);
 
   expanded = input(false);
   expandedChange = output<boolean>();
@@ -41,7 +42,7 @@ export class FilterOptions implements ControlValueAccessor {
   private onTouched: () => void = () => { };
 
   writeValue(val: string[] | string | null): void {
-    this.value.set(this.isMulti() ? (val ?? []) : val);
+    this.value.set(val);
   }
 
   registerOnChange(fn: any): void {
@@ -70,9 +71,15 @@ export class FilterOptions implements ControlValueAccessor {
   }
 
   isChecked(option: string): boolean {
-    return this.isMulti()
-      ? ((this.value() as string[]) ?? []).includes(option)
-      : this.value() === option
+    if (this.isMulti()) {
+      return ((this.value() as string[]) ?? []).includes(option);
+    }
+
+    if (this.value() == null || this.value() === '') {
+      return this.defaultOption() === option;
+    }
+
+    return this.value() === option;
   }
 
   formatOptionLabel(option: string): string {

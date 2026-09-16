@@ -1,0 +1,16 @@
+<div class="w-full flex justify-center items-center flex-wrap">
+  @for (page of (totalPages() | rangePipe: currentPage()); track $index) {
+    @if (page === '...') {
+      <span class="join-item btn btn-md shrink-0 btn-disabled bg-anime-pag">...</span>
+    } @else {
+      <button
+        type="button"
+        class="join-item btn btn-md shrink-0 bg-anime-pag hover:bg-anime-button-active"
+        [class.bg-anime-button-active]="currentPage() === page"
+        [disabled]="isNavigating()"
+        (click)="navigateToPage(page)">
+        {{ page }}
+      </button>
+    }
+  }
+</div>
