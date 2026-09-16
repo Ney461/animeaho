@@ -1,10 +1,12 @@
 export const environment = {
   production: false,
 
-  // URL del backend
-  // Opción 1: si subes el backend a un servidor (Heroku, Vercel, VPS, etc.)
-  // apiUrl: 'https://tu-servidor.com'
+  // Backend repo (clone and run locally or deploy):
+  // https://github.com/Ney461/animeav1-backend-no-oficial
 
-  // Opción 2: si corres el backend localmente
+  // Option 1: if you deploy the backend to a server
+  // apiUrl: 'https://your-server.com'
+
+  // Option 2: if you run the backend locally
   // apiUrl: 'http://localhost:8000'
 };
