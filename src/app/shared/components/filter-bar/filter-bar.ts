@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AnimeService } from '@services/anime.service';
 import { FilterOptions } from "../filter-option/filter-options";
@@ -18,9 +18,9 @@ export type SelectedFilters = {
   imports: [FilterOptions, ReactiveFormsModule],
   templateUrl: './filter-bar.html',
 })
-export class FilterBar {
+export class FilterBar implements OnInit {
 
-  thereQueryParams = output<boolean>();
+  private readonly route = inject(ActivatedRoute);
 
   private readonly animeService = inject(AnimeService);
   private fb = inject(FormBuilder);
@@ -36,6 +36,17 @@ export class FilterBar {
       orden: ['default' as string | null],
     }
   )
+
+  ngOnInit(): void {
+    const params = this.route.snapshot.queryParamMap;
+
+    this.filtersForm.patchValue({
+      tipo: params.get('type')?.split(',') ?? [],
+      genero: params.get('genre')?.split(',') ?? [],
+      estado: params.get('status') ?? 'finished',
+      orden: params.get('order') ?? 'default',
+    });
+  }
 
   selectedFilters = output<SelectedFilters>();
 

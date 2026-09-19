@@ -1,5 +1,6 @@
 import { AfterContentInit, Component, inject } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { AnimeService } from '@services/anime.service';
 import { FilterBar, SelectedFilters } from "@shared/components/filter-bar/filter-bar";
 import { Pagination } from '@shared/components/pagination/pagination';
 
@@ -15,7 +16,8 @@ export class Catalog implements AfterContentInit {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-
+  private animeService = inject(AnimeService);
+  
   ngAfterContentInit(): void {
 
   }
