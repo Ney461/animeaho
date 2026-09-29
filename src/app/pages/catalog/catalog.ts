@@ -28,7 +28,16 @@ export class  Catalog {
   totalPages = signal<string>('1')
 
   constructor() {
-    this.route.queryParamMap.subscribe(() => {
+    this.route.queryParamMap.subscribe(params => {
+      if (params.keys.length === 0) {
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { page: '1', status: 'finished', order: 'default' },
+          replaceUrl: true,
+        });
+        return;
+      }
+
       this.searchAnimes(this.route.snapshot.queryParams);
     })
   }
