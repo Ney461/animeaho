@@ -1,11 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { Component, computed, inject, input, signal } from '@angular/core';
 
-import { LastAnimesResponse } from '@core/models/LastAnimesResponse';
-import { AnimeService } from '@services/anime.service';
 import { AnimeCard } from '@shared/components/anime-card/anime-card';
 import { Spinner } from '@shared/components/spinner/spinner';
+import { Latest } from '@core/models/HomeResponse';
 
 @Component({
   selector: 'anime-list',
@@ -13,11 +10,14 @@ import { Spinner } from '@shared/components/spinner/spinner';
   templateUrl: './anime-list.html',
 })
 export class AnimeList {
-  private readonly animeService = inject(AnimeService);
-  readonly loading = signal(true);
 
-  readonly animeResponse = toSignal(
-    this.animeService.getLastAnimes().pipe(finalize(() => this.loading.set(false))),
-    { initialValue: { animes: [] } as LastAnimesResponse }
-  );
+  latestAnime = input.required<Latest[]>()
+  loadingInput = input.required<boolean>();
+  loading = computed(this.loadingInput);
+
+
+  // readonly animeResponse = toSignal(
+  //   this.animeService.getLastAnimes().pipe(finalize(() => this.loading.set(false))),
+  //   { initialValue: { animes: [] } as LastAnimesResponse }
+  // );
 }

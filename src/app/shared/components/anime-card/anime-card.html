@@ -1,5 +1,5 @@
-<a>
-  <figure class="relative cursor-pointer">
+<a class="cursor-pointer" [routerLink]= "['/anime/', anime().slug]">
+  <figure class="relative">
     <img
       [src]="anime().cover || fallbackImage"
       class="w-full h-80 object-cover hover:scale-110 hover:brightness-110"
@@ -7,7 +7,8 @@
     />
     <span class="badge badge-info text-white absolute left-2 bottom-2 font-bold">{{ anime().type }}</span>
   </figure>
+  <div class="p-3">
+    <p class="text-white font-title font-semibold">{{ anime().title }}</p>
+  </div>
+
 </a>
-<div class="p-3">
-  <p class="text-white font-title font-semibold">{{ anime().title }}</p>
-</div>

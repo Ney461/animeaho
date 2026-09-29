@@ -1,11 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 
-import { LastEpisodesResponse } from '@core/models/LastEpisodesResponse';
 import { AnimeService } from '@services/anime.service';
 import { EpisodeCard } from '@shared/components/episode-card/episode-card';
 import { Spinner } from '@shared/components/spinner/spinner';
+import { Latest } from '@core/models/HomeResponse';
 
 @Component({
   selector: 'episode-list',
@@ -13,12 +13,13 @@ import { Spinner } from '@shared/components/spinner/spinner';
   templateUrl: './episode-list.html',
 })
 export class EpisodeList {
-  animeService = inject(AnimeService)
-  loading = signal(true);
+  latestEpisodes = input.required<Latest[]>()
+  loadingInput = input.required<boolean>();
+  loading = computed(this.loadingInput);
 
-  lastEpisodesList = toSignal(
-    this.animeService.getLastEpisodes().pipe(finalize(() => this.loading.set(false))),
-    { initialValue: { episodes: [] } as Partial<LastEpisodesResponse> as LastEpisodesResponse }
-  )
+  // lastEpisodesList = toSignal(
+  //   this.animeService.getLastEpisodes().pipe(finalize(() => this.loading.set(false))),
+  //   { initialValue: { episodes: [] } as Partial<LastEpisodesResponse> as LastEpisodesResponse }
+  // )
 
 }

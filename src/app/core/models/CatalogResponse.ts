@@ -1,7 +1,7 @@
 export interface CatalogResponse {
   page: number;
   total: number;
-  total_page: number;
+  items_on_page: number;
   per_page: number;
   total_pages: number;
   filters: Filters;
@@ -13,36 +13,41 @@ export interface Anime {
   slug: string;
   url: string;
   cover: string;
-  // type: Type;
-  type: null;
-  year: null;
-  // status: Status;
-  status: null
+  type: AnimeType;
+  year: number | null;
+  status: AnimeStatus;
 }
 
-export enum Status {
-  airing = "airing",
-  finished = "finished",
-  upcoming = "upcoming",
-  null = ""
-}
+export type AnimeType =
+  | "tv"
+  | "movie"
+  | "ova"
+  | "special"
+  | "ona"
+  | "";
 
-export enum Type {
-  tv = "tv",
-  movie = "movie",
-  ova = "ova",
-  special ="special",
-  ona ="ona",
-  null = ""
-}
+export type AnimeStatus =
+  | "airing"
+  | "finished"
+  | "upcoming"
+  | "unknown"
+  | "";
 
 export interface Filters {
   page: number;
-  letter: null;
-  genre: null;
-  minYear: null;
-  maxYear: null;
-  status: null;
-  type: null;
-  order: null;
+  letter: string | null;
+  genre: string[] | null;
+  minYear: number | null;
+  maxYear: number | null;
+  status: AnimeStatus | null;
+  type: AnimeType | null;
+  order: CatalogOrder | null;
 }
+
+export type CatalogOrder =
+  | "default"
+  | "score"
+  | "popular"
+  | "title"
+  | "recent"
+  | "premieres";

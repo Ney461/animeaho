@@ -37,6 +37,7 @@ export class Pagination {
       });
     } finally {
       this.isNavigating.set(false);
+
     }
   }
 

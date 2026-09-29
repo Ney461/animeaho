@@ -1,11 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
 
-import { CatalogResponse } from '@core/models/CatalogResponse';
-import { AnimeService } from '@services/anime.service';
 import { Spinner } from '@shared/components/spinner/spinner';
+import { AiringAnime } from '@core/models/HomeResponse';
 
 @Component({
   selector: 'on-air-list',
@@ -13,10 +10,9 @@ import { Spinner } from '@shared/components/spinner/spinner';
   templateUrl: './on-air-list.html',
 })
 export class OnAirList {
-  animeService = inject(AnimeService);
-  loading = signal(true);
-  animesOnAirList = toSignal(
-    this.animeService.getAnimesOnAir().pipe(finalize(() => this.loading.set(false))),
-    { initialValue: { animes: [] } as Partial<CatalogResponse> as CatalogResponse }
-  )
+
+  onAirList = input.required<AiringAnime[]>()
+  loadingInput = input.required<boolean>()
+  loading = computed<boolean>(this.loadingInput);
+
 }
