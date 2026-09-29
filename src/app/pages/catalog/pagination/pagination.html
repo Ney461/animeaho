@@ -6,7 +6,6 @@
       <button
         type="button"
         class="join-item btn btn-md shrink-0 bg-anime-pag hover:bg-anime-button-active"
-        /* [class.bg-anime-button-active]="currentPage() === page" */
         [style.background-color]="currentPage() === page ? 'var(--color-anime-button-active)' : null"
         [disabled]="isNavigating()"
         (click)="navigateToPage(page)">

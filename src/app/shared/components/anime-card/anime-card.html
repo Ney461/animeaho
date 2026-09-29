@@ -1,7 +1,7 @@
 <a class="cursor-pointer" [routerLink]= "['/anime/', anime().slug]">
   <figure class="relative">
     <img
-      [src]="anime().cover || fallbackImage"
+      [src]="anime().cover | imageFallback"
       class="w-full h-80 object-cover hover:scale-110 hover:brightness-110"
       alt=""
     />

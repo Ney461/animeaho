@@ -1,13 +1,19 @@
 import { Component, input } from '@angular/core';
-import { Latest } from '@core/models/HomeResponse';
-import { RouterLink } from '@angular/router';
+import { ImageFallbackPipe } from '@shared/pipes/image-fallback.pipe';
+
+export interface EpisodeCardItem {
+  number: number;
+  cover: string;
+  title?: string;
+}
 
 @Component({
   selector: 'episode-card',
-  imports: [RouterLink],
+  imports: [ImageFallbackPipe],
   templateUrl: './episode-card.html',
 })
 export class EpisodeCard {
-  episode = input.required<Latest>()
-  fallbackImage = 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=700&q=85'
+  episodeNumber = input.required<number>();
+  cover = input.required<string>();
+  title = input<string | null | undefined>(null);
 }

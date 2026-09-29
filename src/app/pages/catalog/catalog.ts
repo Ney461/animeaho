@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AnimeService } from '@services/anime.service';
-import { FilterBar, SelectedFilters } from "@shared/components/filter-bar/filter-bar";
-import { Pagination } from '@shared/components/pagination/pagination';
+import { Pagination } from '@pages/catalog/pagination/pagination';
 import { AnimeCard } from '@shared/components/anime-card/anime-card';
 import { Spinner } from '@shared/components/spinner/spinner';
 import { finalize } from 'rxjs';
 import { AnimeFilterSearchResponse } from '@core/models/AnimeFilterSearchResponse';
+import { FilterBar, SelectedFilters } from './filter-bar/filter-bar';
 
 @Component({
   selector: 'app-catalog',

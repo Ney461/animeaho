@@ -1,16 +1,15 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 
-import { HomeResponse, Latest } from '@core/models/HomeResponse';
+import { HomeResponse } from '@core/models/HomeResponse';
 import { AnimeService } from '@services/anime.service';
 
-import { OnAirList } from '@shared/components/on-air-list/on-air-list';
-import { Spinner } from '@shared/components/spinner/spinner';
+import { OnAirList } from '@pages/home/on-air-list/on-air-list';
 import { EpisodeList } from '@shared/components/episode-list/episode-list';
-import { AnimeList } from '@shared/components/anime-list/anime-list';
+import { AnimeList } from '@pages/home/anime-list/anime-list';
 
 @Component({
   selector: 'app-home',
-  imports: [OnAirList, Spinner, EpisodeList, AnimeList],
+  imports: [OnAirList, EpisodeList, AnimeList],
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
@@ -19,8 +18,14 @@ export class Home implements OnInit {
 
   readonly homeResponse = signal<HomeResponse | null>(null);
   readonly airingAnimes = computed(() => this.homeResponse()?.data.airing_animes ?? []);
-  readonly latestEpisodes = computed(() => this.homeResponse()?.data.latest_episodes ?? [] as Latest[]);
-  readonly latestAnimes = computed(() => this.homeResponse()?.data.latest_animes ?? [] as Latest[]);
+  readonly latestEpisodes = computed(() =>
+    (this.homeResponse()?.data.latest_episodes ?? []).map(({ number, cover, title }) => ({
+      number,
+      cover,
+      title,
+    }))
+  );
+  readonly latestAnimes = computed(() => this.homeResponse()?.data.latest_animes ?? []);
 
   readonly loadingOnAir = signal<boolean>(true);
   readonly loadingEpisodes = signal<boolean>(true);

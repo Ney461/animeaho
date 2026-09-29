@@ -1,6 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RangePipe } from '@shared/pipes/range-pipe';
+import { RangePipe } from '@pages/catalog/pagination/pipes/range.pipe';
 
 @Component({
   selector: 'pagination',

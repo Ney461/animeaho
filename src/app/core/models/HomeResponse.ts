@@ -5,8 +5,8 @@ export interface HomeResponse {
 
 export interface Data {
   airing_animes:   AiringAnime[];
-  latest_episodes: Latest[];
-  latest_animes:   Latest[];
+  latest_episodes: LatestEpisode[];
+  latest_animes:   LatestAnime[];
 }
 
 export interface AiringAnime {
@@ -14,12 +14,15 @@ export interface AiringAnime {
   slug:  string;
 }
 
-export interface Latest {
+export interface LatestAnime {
   title:   string;
   cover:   string;
   slug:    string;
   type:    Type;
-  number?: number;
+}
+
+export interface LatestEpisode extends LatestAnime {
+  number: number;
 }
 
 export enum Type {

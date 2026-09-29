@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+
 import { AnimeService } from '@services/anime.service';
-import { FilterOptions } from "../filter-option/filter-options";
 import { CatalogOptionsResponse } from '@core/models/CatalogOptionsResponse';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FilterOptions } from '@pages/catalog/filter-option/filter-options';
 
 export type SelectedFilters = {
   tipo: string[] | null;

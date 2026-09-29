@@ -13,11 +13,7 @@
   <div class="divider divider-info my-0 flex lg:hidden"></div>
   <div class="w-full min-w-0">
     <p class="text-xl font-title px-4 pt-4 text-anime-text">ÚLTIMOS EPISODIOS</p>
-    <episode-list
-      [latestEpisodes]="latestEpisodes()"
-      [loadingInput]="loadingEpisodes()"
-      >
-    </episode-list>
+    <episode-list [episodes]="latestEpisodes()" [loadingInput]="loadingEpisodes()"></episode-list>
     <p class="text-xl font-title px-4 pt-4 text-anime-text">ÚLTIMOS ANIMES</p>
     <anime-list
       [latestAnime]="latestAnimes()"
