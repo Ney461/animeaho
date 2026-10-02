@@ -16,11 +16,12 @@ import { FilterBar, SelectedFilters } from './filter-bar/filter-bar';
   imports: [FilterBar, Pagination, AnimeCard, Spinner],
   templateUrl: './catalog.html',
 })
-export class  Catalog {
+export class Catalog {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private animeService = inject(AnimeService);
+  readonly noMedia = signal<boolean>(false);
 
   readonly loading = signal(true);
 
@@ -37,6 +38,21 @@ export class  Catalog {
         });
         return;
       }
+
+      // if (params.has('search')) {
+      //   const onlySearch = params.keys.length === 2 && params.has('page');
+      //   if (!onlySearch) {
+      //     this.router.navigate([], {
+      //       relativeTo: this.route,
+      //       queryParams: {
+      //         search: params.get('search'),
+      //         page: params.get('page') ?? '1',
+      //         replaceUrl: true
+      //       }
+      //     });
+      //     return;
+      //   }
+      // }
 
       this.searchAnimes(this.route.snapshot.queryParams);
     })
@@ -61,7 +77,7 @@ export class  Catalog {
   updateUrl(queryParams: Params | null) {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
+      queryParams: { ...queryParams, search: null },
       queryParamsHandling: 'merge'
     })
   }
@@ -69,17 +85,27 @@ export class  Catalog {
   searchAnimes(queryParams: Params = {}): void {
     this.loading.set(true);
 
-    this.animeService
-      .getFilteredAnimeResults(queryParams)
-      .pipe(
-        finalize(() => this.loading.set(false))
-      )
+    const search = String(queryParams['search'] ?? '').trim();
+    const page = Number(queryParams['page'] ?? 1);
+
+    const request = search
+      ? this.animeService.searchAnimeByText(search, page)
+      : this.animeService.getFilteredAnimeResults(queryParams);
+
+    request
+      .pipe(finalize(() => this.loading.set(false)))
       .subscribe(response => {
 
-        this.totalPages.set(response.data.foundPages.toString())
-        this.animeList.set(response);
 
-      })
+        this.noMedia.set(response.data.media.length === 0)
+
+
+        this.totalPages.set(response.data.foundPages.toString());
+        this.animeList.set(response);
+        console.log(response);
+      });
+
 
   }
+
 }

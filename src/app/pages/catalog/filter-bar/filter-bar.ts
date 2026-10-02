@@ -5,7 +5,7 @@ import { AnimeService } from '@services/anime.service';
 import { CatalogOptionsResponse } from '@core/models/CatalogOptionsResponse';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FilterOptions } from '@pages/catalog/filter-option/filter-options';
+import { FilterOptions } from '@pages/catalog/filter-options/filter-options';
 
 export type SelectedFilters = {
   tipo: string[] | null;

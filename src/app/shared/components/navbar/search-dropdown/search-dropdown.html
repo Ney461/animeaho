@@ -1,0 +1,26 @@
+<ul class="list bg-anime-surface  rounded-box shadow-md">
+  @for (anime of results(); track anime.slug) {
+    <li
+      class="list-row cursor-pointer items-center hover:bg-anime-button/30"
+      [routerLink]= "['/anime/', anime.slug]"
+      (click)="selected.emit()"
+    >
+      <div><img class="size-10 rounded-box" [src]="anime.cover" [alt]="anime.title" /></div>
+      <div class="min-w-0">
+        <p class="truncate font-title">{{ anime.title }}</p>
+        <p class="text-xs uppercase font-semibold opacity-60 font-title">{{ anime.type }}</p>
+      </div>
+    </li>
+  }
+  <li>
+    <button
+      class="btn w-full bg-anime-button hover:bg-anime-button-active border-none rounded-t-none"
+      type="button"
+      (click)="seeAll.emit()"
+    >
+      <p class="font-title">
+        Ver Todos
+      </p>
+    </button>
+  </li>
+</ul>

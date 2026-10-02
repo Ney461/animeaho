@@ -43,4 +43,13 @@ export class AnimeService {
     return this.httpClient.get<AnimeBySlugResponse>(`${this.apiUrl}/anime/${slug}`);
   }
 
+  searchAnimeByText(text: string, page=1) {
+    return this.httpClient.get<AnimeFilterSearchResponse>(
+      `${this.apiUrl}/search`, {
+        params: {query: text, page}
+      }
+
+    )
+  }
+
 }

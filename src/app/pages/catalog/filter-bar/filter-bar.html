@@ -75,7 +75,16 @@
             [expanded]="activeMobileFilter() === 'Orden'"
             (expandedChange)="onMobileFilterExpansionChange('Orden', $event)"
           />
-          <a class="btn bg-anime-button" (click)="sendFilters()">Filtrar</a>
+          <button
+            type="button"
+            class="btn bg-anime-button"
+            (click)="
+              sendFilters();
+              modalFiltros.close()
+              "
+            >
+              Filtrar
+            </button>
         </div>
       </div>
     </dialog>
