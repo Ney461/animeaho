@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Media } from '@core/models/AnimeFilterSearchResponse';
+import { MediaItem } from '@core/models/MediaCatalogResp.interface';
 
 @Component({
   selector: 'search-dropdown',
@@ -9,8 +9,8 @@ import { Media } from '@core/models/AnimeFilterSearchResponse';
 })
 export class SearchDropdown {
 
-  results = input<Media[]>()
-
+  results = input<MediaItem[]>()
+  
   selected = output<void>();
 
   seeAll = output<void>();

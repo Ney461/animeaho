@@ -1,54 +1,71 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { forkJoin, map, Observable } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 
 import { environment } from '@environments/environment';
-import { CatalogOptionsResponse } from '@core/models/CatalogOptionsResponse';
+import { MediaCatalogResp } from '@core/models/MediaCatalogResp.interface';
+import { LatestEpisodesResp } from '@core/models/LatestEpisodesResp.interface';
 import { Params } from '@angular/router';
-import { HomeResponse } from '@core/models/HomeResponse';
-import { AnimeFilterSearchResponse } from '@core/models/AnimeFilterSearchResponse';
-import { AnimeBySlugResponse } from '@core/models/AnimeBySlugResponse';
+import { AnimeDetailResp } from '@core/models/AnimeDetailResp.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AnimeService {
 
   private readonly httpClient = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api`;
+  private readonly animeav1Url = 'https://animeav1.com';
 
-  getHomeResponse(): Observable<HomeResponse> {
-    return this.httpClient.get<HomeResponse>(`${this.apiUrl}/home`)
+  getAnimesOnAiring(): Observable<MediaCatalogResp> {
+    return this.httpClient.get<MediaCatalogResp>(`${this.apiUrl}/search/by-url`, {
+      params: { url: `${this.animeav1Url}/catalogo?status=emision&order=popular` }
+    })
   }
 
-  getCatalogOptions(): Observable<CatalogOptionsResponse> {
-    return this.httpClient.get<CatalogOptionsResponse>(`${this.apiUrl}/catalog/options`);
+  getLatestEpisodes(): Observable<LatestEpisodesResp> {
+    return this.httpClient.get<LatestEpisodesResp>(`${this.apiUrl}/list/latest-episodes`)
   }
 
-  getFilteredAnimeResults(params: Params): Observable<AnimeFilterSearchResponse> {
+  getLatestAnimesReleased(): Observable<MediaCatalogResp> {
+    return this.httpClient.get<MediaCatalogResp>(`${this.apiUrl}/search/by-url`, {
+      params: { url: `${this.animeav1Url}/catalogo?order=latest_released` }
+    })
+  }
 
-    let httpParams = new HttpParams();
+  getFilteredAnimeResults(paramsInput: Params): Observable<MediaCatalogResp> {
+    const queryString = new HttpParams({ fromObject: paramsInput }).toString();
 
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== null && value !== undefined ){
-        httpParams = httpParams.set(key, String(value));
-      }
-    });
+    return this.httpClient.get<MediaCatalogResp>(`${this.apiUrl}/search/by-url`, {
+      params: { url: `${this.animeav1Url}/catalogo?${queryString}` }
+    }).pipe(
+      catchError(err => {
+        console.error('Error en API:', err);
 
-    return this.httpClient.get<AnimeFilterSearchResponse>(
-      `${this.apiUrl}/search/by-filter`,
-      {params: httpParams}
-    )
+        const emptyResponse: MediaCatalogResp = {
+          success: false,
+          data: {
+            currentPage: 1,
+            hasNextPage: false,
+            previousPage: null,
+            nextPage: null,
+            foundPages: 0,
+            media: []
+          }
+        };
+
+        return of(emptyResponse);
+      })
+    );
   }
 
   searchAnimeBySlug(slug: string) {
-    return this.httpClient.get<AnimeBySlugResponse>(`${this.apiUrl}/anime/${slug}`);
+    return this.httpClient.get<AnimeDetailResp>(`${this.apiUrl}/anime/${slug}`);
   }
 
-  searchAnimeByText(text: string, page=1) {
-    return this.httpClient.get<AnimeFilterSearchResponse>(
+  searchAnimeByText(text: string, page = 1) {
+    return this.httpClient.get<MediaCatalogResp>(
       `${this.apiUrl}/search`, {
-        params: {query: text, page}
-      }
-
+      params: { query: text, page }
+    }
     )
   }
 

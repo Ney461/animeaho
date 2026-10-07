@@ -1,8 +1,6 @@
 import { Component, input } from '@angular/core';
-import { Media } from '@core/models/AnimeFilterSearchResponse';
-
-import { LatestAnime } from '@core/models/HomeResponse';
 import { RouterLink } from '@angular/router';
+import { MediaItem } from '@core/models/MediaCatalogResp.interface';
 import { ImageFallbackPipe } from '@shared/pipes/image-fallback.pipe';
 
 @Component({
@@ -11,6 +9,5 @@ import { ImageFallbackPipe } from '@shared/pipes/image-fallback.pipe';
   templateUrl: './anime-card.html',
 })
 export class AnimeCard {
-  anime = input.required<LatestAnime | Media>();
-
+  anime = input.required<MediaItem>();
 }

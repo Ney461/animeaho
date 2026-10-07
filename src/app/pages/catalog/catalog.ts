@@ -5,8 +5,8 @@ import { Pagination } from '@pages/catalog/pagination/pagination';
 import { AnimeCard } from '@shared/components/anime-card/anime-card';
 import { Spinner } from '@shared/components/spinner/spinner';
 import { finalize } from 'rxjs';
-import { AnimeFilterSearchResponse } from '@core/models/AnimeFilterSearchResponse';
 import { FilterBar, SelectedFilters } from './filter-bar/filter-bar';
+import { MediaItem } from '@core/models/MediaCatalogResp.interface';
 
 @Component({
   selector: 'app-catalog',
@@ -21,12 +21,12 @@ export class Catalog {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private animeService = inject(AnimeService);
+
   readonly noMedia = signal<boolean>(false);
-
   readonly loading = signal(true);
-
-  readonly animeList = signal<Partial<AnimeFilterSearchResponse>>({});
   totalPages = signal<string>('1')
+  animeList = signal<MediaItem[]>([])
+
 
   constructor() {
     this.route.queryParamMap.subscribe(params => {
@@ -39,20 +39,20 @@ export class Catalog {
         return;
       }
 
-      // if (params.has('search')) {
-      //   const onlySearch = params.keys.length === 2 && params.has('page');
-      //   if (!onlySearch) {
-      //     this.router.navigate([], {
-      //       relativeTo: this.route,
-      //       queryParams: {
-      //         search: params.get('search'),
-      //         page: params.get('page') ?? '1',
-      //         replaceUrl: true
-      //       }
-      //     });
-      //     return;
-      //   }
-      // }
+      if (params.has('search')) {
+        const onlySearch = params.keys.length === 2 && params.has('page');
+        if (!onlySearch) {
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {
+              search: params.get('search'),
+              page: params.get('page') ?? '1',
+              replaceUrl: true
+            }
+          });
+          return;
+        }
+      }
 
       this.searchAnimes(this.route.snapshot.queryParams);
     })
@@ -62,10 +62,10 @@ export class Catalog {
 
     const { tipo, genero, estado, orden } = value
 
-    const queryParams: Record<string, string | null> = {
+    const queryParams: Record<string, any> = {
       page: '1',
-      type: tipo?.length ? tipo.join(',') : null,
-      genre: genero?.length ? genero.join(',') : null,
+      category: tipo?.length ? tipo: null,
+      genre: genero?.length ? genero : null,
       status: estado || null,
       order: orden || null,
     };
@@ -98,10 +98,11 @@ export class Catalog {
 
 
         this.noMedia.set(response.data.media.length === 0)
+        console.log(this.noMedia());
 
 
         this.totalPages.set(response.data.foundPages.toString());
-        this.animeList.set(response);
+        this.animeList.set(response.data.media);
         console.log(response);
       });
 

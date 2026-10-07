@@ -2,23 +2,15 @@
   <div class="w-full min-w-0 self-start lg:sticky lg:top-0 lg:basis-1/4">
     <p class="text-xl font-title text-anime-text px-4 pb-4 pt-4">ANIMES POPULARES EN EMISIÓN</p>
     <div class="overflow-x-auto overflow-y-hidden overscroll-contain lg:max-h-dvh lg:overflow-x-hidden lg:overflow-y-auto">
-      <on-air-list
-        [onAirList]="airingAnimes()"
-        [loadingInput]="loadingOnAir()"
-      >
-    </on-air-list>
+      <on-air-list></on-air-list>
     </div>
   </div>
   <div class="divider divider-horizontal divider-info my-0 hidden lg:flex"></div>
   <div class="divider divider-info my-0 flex lg:hidden"></div>
   <div class="w-full min-w-0">
     <p class="text-xl font-title px-4 pt-4 text-anime-text">ÚLTIMOS EPISODIOS</p>
-    <episode-list [episodes]="latestEpisodes()" [loadingInput]="loadingEpisodes()"></episode-list>
+    <episode-list></episode-list>
     <p class="text-xl font-title px-4 pt-4 text-anime-text">ÚLTIMOS ANIMES</p>
-    <anime-list
-      [latestAnime]="latestAnimes()"
-      [loadingInput]="loadingAnimes()"
-      >
-    </anime-list>
+    <anime-list></anime-list>
   </div>
 </div>

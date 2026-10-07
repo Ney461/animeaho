@@ -1,11 +1,9 @@
 import { Component, inject, OnInit, output, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 
-import { AnimeService } from '@services/anime.service';
-import { CatalogOptionsResponse } from '@core/models/CatalogOptionsResponse';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FilterOptions } from '@pages/catalog/filter-options/filter-options';
+import { ActivatedRoute } from '@angular/router';
+import { FilterOptions } from '@pages/catalog/filter-bar/filter-options/filter-options';
+import { GENRES_OPTIONS as GENRE_OPTIONS, ORDER_OPTIONS, STATUS_OPTIONS, CATEGORY_OPTIONS } from '@core/constants/option-labels';
 
 export type SelectedFilters = {
   tipo: string[] | null;
@@ -22,12 +20,16 @@ export type SelectedFilters = {
 export class FilterBar implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
-
-  private readonly animeService = inject(AnimeService);
   private fb = inject(FormBuilder);
 
-  readonly options = toSignal<CatalogOptionsResponse>(this.animeService.getCatalogOptions());
   readonly activeMobileFilter = signal<string | null>(null);
+
+  readonly orderOptions = ORDER_OPTIONS;
+  readonly genreOptions = GENRE_OPTIONS;
+  readonly typeOptions = CATEGORY_OPTIONS;
+  readonly statusOptions = STATUS_OPTIONS;
+
+  selectedFilters = output<SelectedFilters>();
 
   readonly filtersForm = this.fb.group(
     {
@@ -42,14 +44,12 @@ export class FilterBar implements OnInit {
     const params = this.route.snapshot.queryParamMap;
 
     this.filtersForm.patchValue({
-      tipo: params.get('type')?.split(',') ?? [],
-      genero: params.get('genre')?.split(',') ?? [],
+      tipo: params.getAll('types') ?? [],
+      genero: params.getAll('genre') ?? [],
       estado: params.get('status') ?? 'finished',
       orden: params.get('order') ?? 'default',
     });
   }
-
-  selectedFilters = output<SelectedFilters>();
 
   onMobileFilterExpansionChange(filterLabel: string, isExpanded: boolean) {
     this.activeMobileFilter.set(isExpanded ? filterLabel : null);

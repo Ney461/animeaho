@@ -1,7 +1,7 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, forwardRef, input, output, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { optionLabels } from '@core/constants/option-labels';
+import { FilterOption } from '@core/constants/option-labels';
 
 @Component({
   selector: 'filter-options',
@@ -22,13 +22,12 @@ import { optionLabels } from '@core/constants/option-labels';
 export class FilterOptions implements ControlValueAccessor {
 
   dropdownTop = input<boolean>(false);
-
   filterLabel = input.required<string>();
-  options = input.required<string[]>();
+  options = input.required<FilterOption[]>();
   variant = input<'dropdown' | 'collapse'>('dropdown');
   defaultOption = input<string | null>(null);
-
   expanded = input(false);
+
   expandedChange = output<boolean>();
 
   value = signal<string[] | string | null>(null);
@@ -80,15 +79,6 @@ export class FilterOptions implements ControlValueAccessor {
     }
 
     return this.value() === option;
-  }
-
-  formatOptionLabel(option: string): string {
-    const normalizedOption = option.toLowerCase();
-
-    return optionLabels[normalizedOption] ?? option
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
   }
 
   onExpansionChange(event: Event): void {

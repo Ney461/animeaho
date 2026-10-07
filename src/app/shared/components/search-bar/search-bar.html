@@ -33,6 +33,10 @@
       >
       </search-dropdown>
     </div>
+  } @else if (noResults()) {
+    <div class="absolute top-full left-0 w-full z-50 mt-1 rounded-box bg-anime-surface p-4 text-center font-title shadow-md">
+      No se encontraron animes.
+    </div>
   }
 
 </div>

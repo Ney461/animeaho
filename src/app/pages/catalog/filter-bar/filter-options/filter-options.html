@@ -59,16 +59,16 @@
       ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-x-4'
       : ''"
   >
-    @for (option of options(); track $index) {
+    @for (option of options(); track option.value) {
       <li>
         <label class="flex items-center gap-2 cursor-pointer whitespace-nowrap">
           <input
             type="checkbox"
             class="checkbox checkbox-sm"
-            [checked]="isChecked(option)"
-            (change)="toggleOption(option, $event)"
+            [checked]="isChecked(option.value)"
+            (change)="toggleOption(option.value, $event)"
           />
-          {{ formatOptionLabel(option) }}
+          {{ option.label }}
         </label>
       </li>
     }
@@ -86,10 +86,10 @@
             type="radio"
             [name]="filterLabel() + '-' + variant()"
             class="radio"
-            [checked]="isChecked(option)"
-            (change)="selectSingleOption(option)"
+            [checked]="isChecked(option.value)"
+            (change)="selectSingleOption(option.value)"
           />
-          {{ formatOptionLabel(option) }}
+          {{ option.label }}
         </label>
       </li>
     }

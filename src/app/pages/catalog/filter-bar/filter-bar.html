@@ -4,26 +4,26 @@
     <filter-options
       formControlName="tipo"
       filterLabel="Tipo"
-      [options]="options()?.types ?? []"
+      [options]="typeOptions"
       variant="dropdown"
     />
     <filter-options
       formControlName="genero"
       filterLabel="Género"
-      [options]="options()?.genres ?? []"
+      [options]="genreOptions"
       variant="dropdown"
     />
     <filter-options
       formControlName="estado"
       filterLabel="Estado"
-      [options]="options()?.statuses ?? []"
+      [options]="statusOptions"
       defaultOption="finished"
       variant="dropdown"
     />
     <filter-options
       formControlName="orden"
       filterLabel="Orden"
-      [options]="options()?.orders ?? []"
+      [options]="orderOptions"
       defaultOption="default"
       variant="dropdown"
     />
@@ -44,7 +44,7 @@
           <filter-options
             formControlName="tipo"
             filterLabel="Tipo"
-            [options]="options()?.types ?? []"
+            [options]="typeOptions"
             variant="collapse"
             [expanded]="activeMobileFilter() === 'Tipo'"
             (expandedChange)="onMobileFilterExpansionChange('Tipo', $event)"
@@ -52,7 +52,7 @@
           <filter-options
             formControlName="genero"
             filterLabel="Género"
-            [options]="options()?.genres ?? []"
+            [options]="genreOptions"
             variant="collapse"
             [expanded]="activeMobileFilter() === 'Género'"
             (expandedChange)="onMobileFilterExpansionChange('Género', $event)"
@@ -60,7 +60,7 @@
           <filter-options
             formControlName="estado"
             filterLabel="Estado"
-            [options]="options()?.statuses ?? []"
+            [options]="statusOptions"
             defaultOption="finished"
             variant="collapse"
             [expanded]="activeMobileFilter() === 'Estado'"
@@ -69,7 +69,7 @@
           <filter-options
             formControlName="orden"
             filterLabel="Orden"
-            [options]="options()?.orders ?? []"
+            [options]="orderOptions"
             defaultOption="default"
             variant="collapse"
             [expanded]="activeMobileFilter() === 'Orden'"

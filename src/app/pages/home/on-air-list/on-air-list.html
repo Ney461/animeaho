@@ -2,7 +2,7 @@
   <app-spinner></app-spinner>
 } @else {
   <div class="flex w-max min-w-full flex-row lg:w-auto lg:min-w-0 lg:flex-col">
-    @for (anime of onAirList(); track anime.slug) {
+    @for (anime of animeList(); track anime.slug) {
       <a
         [routerLink]= "['/anime/', anime.slug]"
         class="block w-40 shrink-0 truncate border-b-4 border-transparent px-4 py-2 text-anime-text transition-all duration-200 hover:border-anime-cyan hover:text-white hover:bg-anime-list-hover lg:w-auto lg:border-b-0 lg:border-l-4 lg:pl-3 lg:hover:translate-x-1"

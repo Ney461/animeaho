@@ -1,18 +1,39 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { MediaItem } from '@core/models/MediaCatalogResp.interface';
 
+import { AnimeService } from '@services/anime.service';
 import { Spinner } from '@shared/components/spinner/spinner';
-import { AiringAnime } from '@core/models/HomeResponse';
+
 
 @Component({
   selector: 'on-air-list',
   imports: [RouterLink, Spinner],
   templateUrl: './on-air-list.html',
 })
-export class OnAirList {
+export class OnAirList implements OnInit {
 
-  onAirList = input.required<AiringAnime[]>()
-  loadingInput = input.required<boolean>()
-  loading = computed<boolean>(this.loadingInput);
+  private readonly animeService = inject(AnimeService);
+
+  animeList = signal<MediaItem[]>([]);
+
+  loading = signal(true);
+
+  ngOnInit(): void {
+    this.loadAnimes();
+  }
+
+  loadAnimes() {
+    this.animeService.getAnimesOnAiring().subscribe({
+      next: (response) => {
+        this.animeList.set(response.data.media);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        // console.log(err);
+        this.loading.set(false);
+      }
+    })
+  }
 
 }
