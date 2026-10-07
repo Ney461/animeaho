@@ -6,7 +6,7 @@ import { FilterOptions } from '@pages/catalog/filter-bar/filter-options/filter-o
 import { GENRES_OPTIONS as GENRE_OPTIONS, ORDER_OPTIONS, STATUS_OPTIONS, CATEGORY_OPTIONS } from '@core/constants/option-labels';
 
 export type SelectedFilters = {
-  tipo: string[] | null;
+  category: string[] | null;
   genero: string[] | null;
   estado: string | null;
   orden: string | null;
@@ -26,14 +26,14 @@ export class FilterBar implements OnInit {
 
   readonly orderOptions = ORDER_OPTIONS;
   readonly genreOptions = GENRE_OPTIONS;
-  readonly typeOptions = CATEGORY_OPTIONS;
+  readonly categoryOptions = CATEGORY_OPTIONS;
   readonly statusOptions = STATUS_OPTIONS;
 
   selectedFilters = output<SelectedFilters>();
 
   readonly filtersForm = this.fb.group(
     {
-      tipo: [[] as string[]],
+      category: [[] as string[]],
       genero: [[] as string[]],
       estado: ['finished' as string | null],
       orden: ['default' as string | null],
@@ -44,8 +44,8 @@ export class FilterBar implements OnInit {
     const params = this.route.snapshot.queryParamMap;
 
     this.filtersForm.patchValue({
-      tipo: params.getAll('types') ?? [],
-      genero: params.getAll('genre') ?? [],
+      category: params.getAll('category'),
+      genero: params.getAll('genre'),
       estado: params.get('status') ?? 'finished',
       orden: params.get('order') ?? 'default',
     });

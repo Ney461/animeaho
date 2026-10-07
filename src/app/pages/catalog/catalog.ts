@@ -1,89 +1,109 @@
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { AnimeService } from '@services/anime.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
+import { EMPTY, catchError, finalize, switchMap, tap } from 'rxjs';
+
+import { MediaItem } from '@core/models/MediaCatalogResp.interface';
 import { Pagination } from '@pages/catalog/pagination/pagination';
 import { AnimeCard } from '@shared/components/anime-card/anime-card';
 import { Spinner } from '@shared/components/spinner/spinner';
-import { finalize } from 'rxjs';
+import { AnimeService } from '@services/anime.service';
 import { FilterBar, SelectedFilters } from './filter-bar/filter-bar';
-import { MediaItem } from '@core/models/MediaCatalogResp.interface';
 
 @Component({
   selector: 'app-catalog',
   host: {
-    class: 'flex flex-1 flex-col'
+    class: 'flex flex-1 flex-col',
   },
   imports: [FilterBar, Pagination, AnimeCard, Spinner],
   templateUrl: './catalog.html',
 })
 export class Catalog {
-
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private animeService = inject(AnimeService);
+  private readonly animeService = inject(AnimeService);
 
   readonly noMedia = signal<boolean>(false);
   readonly loading = signal(true);
-  totalPages = signal<string>('1')
-  animeList = signal<MediaItem[]>([])
-
+  readonly loadError = signal<string | null>(null);
+  readonly totalPages = signal('1');
+  readonly animeList = signal<MediaItem[]>([]);
 
   constructor() {
-    this.route.queryParamMap.subscribe(params => {
-      if (params.keys.length === 0) {
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: { page: '1', status: 'finished', order: 'default' },
-          replaceUrl: true,
-        });
-        return;
-      }
-
-      if (params.has('search')) {
-        const onlySearch = params.keys.length === 2 && params.has('page');
-        if (!onlySearch) {
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: {
-              search: params.get('search'),
-              page: params.get('page') ?? '1',
-              replaceUrl: true
-            }
-          });
-          return;
-        }
-      }
-
-      this.searchAnimes(this.route.snapshot.queryParams);
-    })
+    this.watchQueryParams();
   }
 
-  catchFilters(value: SelectedFilters) {
+  private watchQueryParams(): void {
+    this.route.queryParamMap
+      .pipe(
+        switchMap((params) => this.handleQueryParams(params)),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
+  }
 
-    const { tipo, genero, estado, orden } = value
+  private handleQueryParams(params: ParamMap) {
+    if (params.keys.length === 0) {
+      this.setDefaultQueryParams();
+      return EMPTY;
+    }
 
-    const queryParams: Record<string, any> = {
+    if (this.needsSearchNormalization(params)) {
+      this.normalizeSearchParams(params);
+      return EMPTY;
+    }
+
+    return this.loadAnimes(this.route.snapshot.queryParams);
+  }
+
+  private setDefaultQueryParams(): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: '1', status: 'finished', order: 'default' },
+      replaceUrl: true,
+    });
+  }
+
+  private needsSearchNormalization(params: ParamMap): boolean {
+    return (
+      params.has('search') &&
+      !(params.keys.length === 2 && params.has('page'))
+    );
+  }
+
+  private normalizeSearchParams(params: ParamMap): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: params.get('search'),
+        page: params.get('page') ?? '1',
+      },
+      replaceUrl: true,
+    });
+  }
+
+  catchFilters({ category, genero, estado, orden }: SelectedFilters): void {
+    this.updateUrl({
       page: '1',
-      category: tipo?.length ? tipo: null,
+      category: category?.length ? category : null,
       genre: genero?.length ? genero : null,
       status: estado || null,
       order: orden || null,
-    };
-
-    this.updateUrl(queryParams)
-
+    });
   }
 
-  updateUrl(queryParams: Params | null) {
+  private updateUrl(queryParams: Params | null): void {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { ...queryParams, search: null },
-      queryParamsHandling: 'merge'
-    })
+      queryParamsHandling: 'merge',
+    });
   }
 
-  searchAnimes(queryParams: Params = {}): void {
+  private loadAnimes(queryParams: Params) {
     this.loading.set(true);
+    this.loadError.set(null);
 
     const search = String(queryParams['search'] ?? '').trim();
     const page = Number(queryParams['page'] ?? 1);
@@ -92,21 +112,32 @@ export class Catalog {
       ? this.animeService.searchAnimeByText(search, page)
       : this.animeService.getFilteredAnimeResults(queryParams);
 
-    request
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe(response => {
-
-
-        this.noMedia.set(response.data.media.length === 0)
-        console.log(this.noMedia());
-
-
+    return request.pipe(
+      tap((response) => {
+        this.loadError.set(null);
+        this.noMedia.set(response.data.media.length === 0);
         this.totalPages.set(response.data.foundPages.toString());
         this.animeList.set(response.data.media);
-        console.log(response);
-      });
+      }),
+      catchError((error: unknown) => {
+        this.clearAnimeResults();
 
+        if (error instanceof HttpErrorResponse && error.status === 404) {
+          this.noMedia.set(true);
+          return EMPTY;
+        }
 
+        this.loadError.set('No se pudo cargar el catálogo. Inténtalo de nuevo.');
+        console.error('Error al cargar el catálogo:', error);
+        return EMPTY;
+      }),
+      finalize(() => this.loading.set(false)),
+    );
   }
 
+  private clearAnimeResults(): void {
+    this.animeList.set([]);
+    this.totalPages.set('1');
+    this.noMedia.set(false);
+  }
 }

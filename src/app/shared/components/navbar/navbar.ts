@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { SearchBar } from '@shared/components/search-bar/search-bar';
+import { SearchBar } from '@shared/components/navbar/search-bar/search-bar';
 import { NavbarLogo } from './navbar-logo/navbar-logo';
 
 @Component({

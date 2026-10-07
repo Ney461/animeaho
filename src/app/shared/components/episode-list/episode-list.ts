@@ -1,8 +1,7 @@
-import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 
 import { EpisodeCard } from '@shared/components/episode-card/episode-card';
 import { Spinner } from '@shared/components/spinner/spinner';
-import { EpisodeCardItem } from '@shared/components/episode-card/episode-card';
 import { AnimeService } from '@services/anime.service';
 import { LatestEpisodesItem } from '@core/models/LatestEpisodesResp.interface';
 
@@ -28,7 +27,7 @@ export class EpisodeList  implements OnInit {
         this.loading.set(false);
       },
       error: (err) => {
-        // console.log(err);
+        console.log(err);
         this.loading.set(false);
       }
     })

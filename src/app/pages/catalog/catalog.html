@@ -6,6 +6,10 @@
       <div class="flex-1 flex items-center justify-center p-8">
         <app-spinner></app-spinner>
       </div>
+    } @else if (loadError()) {
+      <div class="flex-1 flex items-center justify-center p-8">
+        <p class="text-center">{{ loadError() }}</p>
+      </div>
     } @else if (noMedia()) {
       <div class="flex-1 flex items-center justify-center p-8">
         <p class="text-center">No se encontraron animes</p>

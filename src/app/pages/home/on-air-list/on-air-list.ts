@@ -29,8 +29,7 @@ export class OnAirList implements OnInit {
         this.animeList.set(response.data.media);
         this.loading.set(false);
       },
-      error: (err) => {
-        // console.log(err);
+      error: () => {
         this.loading.set(false);
       }
     })

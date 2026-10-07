@@ -1,5 +1,5 @@
-import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
-import { MediaCatalogData, MediaItem } from '@core/models/MediaCatalogResp.interface';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { MediaItem } from '@core/models/MediaCatalogResp.interface';
 import { AnimeService } from '@services/anime.service';
 
 import { AnimeCard } from '@shared/components/anime-card/anime-card';
@@ -16,7 +16,6 @@ export class AnimeList implements OnInit {
 
   loading = signal<boolean>(true);
 
-  response = signal<MediaCatalogData |  null >(null);
   animeList = signal<MediaItem[] | null>(null)
 
   ngOnInit(): void {
@@ -26,12 +25,11 @@ export class AnimeList implements OnInit {
   loadLatestAnimesReleased() {
     this.animeService.getLatestAnimesReleased().subscribe({
       next: (resp) => {
-        this.response.set(resp.data);
         this.animeList.set(resp.data.media);
         this.loading.set(false);
       },
       error: (err) => {
-        // console.log(err);
+        console.log(err);
         this.loading.set(false);
       }
     })

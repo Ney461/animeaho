@@ -1,6 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, linkedSignal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { AnimeDetailData } from '@core/models/AnimeDetailResp.interface';
+
+import { catchError, EMPTY, filter, map, switchMap } from 'rxjs';
+
 import { AnimeService } from '@services/anime.service';
 
 @Component({
@@ -8,39 +11,22 @@ import { AnimeService } from '@services/anime.service';
   imports: [],
   templateUrl: './anime-detail.html',
 })
-export class AnimeDetail implements OnInit {
+export class AnimeDetail {
 
   private readonly route = inject(ActivatedRoute);
   private readonly animeService = inject(AnimeService);
 
-  private animeData = signal<AnimeDetailData|null>(null)
+  private readonly loadedAnime = toSignal(
+    this.route.paramMap.pipe(
+      map((params) => params.get('slug')),
+      filter((slug): slug is string => !!slug),
+      switchMap((slug) => this.animeService.searchAnimeBySlug(slug).pipe(
+        map((resp) => resp.data),
+        catchError(() => EMPTY),
+      )),
+    ),
+    { initialValue: null },
+  );
 
-  ngOnInit(): void {
-      this.route.paramMap.subscribe(params => {
-        const slug = params.get('slug');
-
-        if (slug) {
-          this.loadAnimeData(slug);
-        }
-
-      })
-  }
-
-  loadAnimeData(slug: string) {
-    this.animeService.searchAnimeBySlug(slug).subscribe({
-      next: (data) => {
-
-        this.animeData.set(data.data)
-
-        console.log(this.animeData());
-
-      },
-      error: (err) => {
-        console.log(err);
-
-      }
-    })
-  }
-
-
+  readonly animeData = linkedSignal(() => this.loadedAnime());
 }
