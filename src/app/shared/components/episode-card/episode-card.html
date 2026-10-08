@@ -1,4 +1,4 @@
-<a>
+<a [routerLink]="['/episode/', slug() | extractSlug, episodeNumber()]">
   <figure class="relative cursor-pointer">
     <img
       [src]="cover() | imageFallback"

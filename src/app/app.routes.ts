@@ -3,6 +3,7 @@ import { Home } from './pages/home/home';
 import { Catalog } from './pages/catalog/catalog';
 import { Layout } from './layout/layout/layout';
 import { AnimeDetail } from '@pages/anime-detail/anime-detail';
+import { EpisodePlayer } from '@pages/episode-player/episode-player';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,10 @@ export const routes: Routes = [
       {
         path: 'anime/:slug',
         component: AnimeDetail
+      },
+      {
+        path: 'episode/:slug/:number',
+        component: EpisodePlayer
       },
       {
         path: '',

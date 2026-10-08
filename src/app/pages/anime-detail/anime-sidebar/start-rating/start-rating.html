@@ -1,0 +1,15 @@
+<div class="rating rating-lg rating-half pointer-events-none">
+  <input type="radio" name="star-rating" class="rating-hidden" tabindex="-1" aria-label="clear" />
+  @for (half of halves; track half) {
+    <input
+      type="radio"
+      name="star-rating"
+      tabindex="-1"
+      class="mask mask-star-2 bg-green-500"
+      [class.mask-half-1]="half % 2 === 1"
+      [class.mask-half-2]="half % 2 === 0"
+      [checked]="half === activeHalf()"
+      [attr.aria-label]="half / 2 + ' star'"
+    />
+  }
+</div>

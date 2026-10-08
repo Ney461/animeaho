@@ -60,7 +60,7 @@ export class Catalog {
   private setDefaultQueryParams(): void {
     void this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { page: '1', status: 'finished', order: 'default' },
+      queryParams: { page: '1', status: 'finalizado', order: 'default' },
       replaceUrl: true,
     });
   }

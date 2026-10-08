@@ -35,7 +35,7 @@ export class FilterBar implements OnInit {
     {
       category: [[] as string[]],
       genero: [[] as string[]],
-      estado: ['finished' as string | null],
+      estado: ['finalizado' as string | null],
       orden: ['default' as string | null],
     }
   )
@@ -46,7 +46,7 @@ export class FilterBar implements OnInit {
     this.filtersForm.patchValue({
       category: params.getAll('category'),
       genero: params.getAll('genre'),
-      estado: params.get('status') ?? 'finished',
+      estado: params.get('status') ?? 'finalizado',
       orden: params.get('order') ?? 'default',
     });
   }
