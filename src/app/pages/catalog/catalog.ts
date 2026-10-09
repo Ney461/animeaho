@@ -1,22 +1,30 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
-import { EMPTY, catchError, finalize, switchMap, tap } from 'rxjs';
+import { catchError, filter, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
 
-import { MediaItem } from '@core/models/MediaCatalogResp.interface';
+import { MediaCatalogData } from '@core/models/MediaCatalogResp.interface';
 import { Pagination } from '@pages/catalog/pagination/pagination';
 import { AnimeCard } from '@shared/components/anime-card/anime-card';
+import { ErrorMessage } from '@shared/components/error-message/error-message';
 import { Spinner } from '@shared/components/spinner/spinner';
 import { AnimeService } from '@services/anime.service';
 import { FilterBar, SelectedFilters } from './filter-bar/filter-bar';
 
+const EMPTY_CATALOG: MediaCatalogData = {
+  currentPage: 1,
+  hasNextPage: false,
+  previousPage: null,
+  nextPage: null,
+  foundPages: 1,
+  media: [],
+};
+
 @Component({
   selector: 'app-catalog',
-  host: {
-    class: 'flex flex-1 flex-col',
-  },
-  imports: [FilterBar, Pagination, AnimeCard, Spinner],
+  host: { class: 'flex flex-1 flex-col' },
+  imports: [FilterBar, Pagination, AnimeCard, Spinner, ErrorMessage],
   templateUrl: './catalog.html',
 })
 export class Catalog {
@@ -24,64 +32,18 @@ export class Catalog {
   private readonly route = inject(ActivatedRoute);
   private readonly animeService = inject(AnimeService);
 
-  readonly noMedia = signal<boolean>(false);
-  readonly loading = signal(true);
   readonly loadError = signal<string | null>(null);
-  readonly totalPages = signal('1');
-  readonly animeList = signal<MediaItem[]>([]);
 
-  constructor() {
-    this.watchQueryParams();
-  }
-
-  private watchQueryParams(): void {
-    this.route.queryParamMap
-      .pipe(
-        switchMap((params) => this.handleQueryParams(params)),
-        takeUntilDestroyed(),
-      )
-      .subscribe();
-  }
-
-  private handleQueryParams(params: ParamMap) {
-    if (params.keys.length === 0) {
-      this.setDefaultQueryParams();
-      return EMPTY;
-    }
-
-    if (this.needsSearchNormalization(params)) {
-      this.normalizeSearchParams(params);
-      return EMPTY;
-    }
-
-    return this.loadAnimes(this.route.snapshot.queryParams);
-  }
-
-  private setDefaultQueryParams(): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { page: '1', status: 'finalizado', order: 'default' },
-      replaceUrl: true,
-    });
-  }
-
-  private needsSearchNormalization(params: ParamMap): boolean {
-    return (
-      params.has('search') &&
-      !(params.keys.length === 2 && params.has('page'))
-    );
-  }
-
-  private normalizeSearchParams(params: ParamMap): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        search: params.get('search'),
-        page: params.get('page') ?? '1',
-      },
-      replaceUrl: true,
-    });
-  }
+  readonly catalog = toSignal<MediaCatalogData | null>(
+    this.route.queryParamMap.pipe(
+      filter((params) => !this.redirectIfNeeded(params)),
+      tap(() => this.loadError.set(null)),
+      switchMap(() =>
+        this.loadAnimes(this.route.snapshot.queryParams).pipe(startWith(null)),
+      ),
+    ),
+    { initialValue: null },
+  );
 
   catchFilters({ category, genero, estado, orden }: SelectedFilters): void {
     this.updateUrl({
@@ -93,18 +55,7 @@ export class Catalog {
     });
   }
 
-  private updateUrl(queryParams: Params | null): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { ...queryParams, search: null },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  private loadAnimes(queryParams: Params) {
-    this.loading.set(true);
-    this.loadError.set(null);
-
+  private loadAnimes(queryParams: Params): Observable<MediaCatalogData> {
     const search = String(queryParams['search'] ?? '').trim();
     const page = Number(queryParams['page'] ?? 1);
 
@@ -113,31 +64,51 @@ export class Catalog {
       : this.animeService.getFilteredAnimeResults(queryParams);
 
     return request.pipe(
-      tap((response) => {
-        this.loadError.set(null);
-        this.noMedia.set(response.data.media.length === 0);
-        this.totalPages.set(response.data.foundPages.toString());
-        this.animeList.set(response.data.media);
-      }),
+      map((response) => response.data),
       catchError((error: unknown) => {
-        this.clearAnimeResults();
-
         if (error instanceof HttpErrorResponse && error.status === 404) {
-          this.noMedia.set(true);
-          return EMPTY;
+          return of(EMPTY_CATALOG);
         }
 
-        this.loadError.set('No se pudo cargar el catálogo. Inténtalo de nuevo.');
         console.error('Error al cargar el catálogo:', error);
-        return EMPTY;
+        this.loadError.set('No se pudo cargar el catálogo. Inténtalo de nuevo.');
+        return of(EMPTY_CATALOG);
       }),
-      finalize(() => this.loading.set(false)),
     );
   }
 
-  private clearAnimeResults(): void {
-    this.animeList.set([]);
-    this.totalPages.set('1');
-    this.noMedia.set(false);
+  private redirectIfNeeded(params: ParamMap): boolean {
+    if (params.keys.length === 0) {
+      this.replaceQueryParams({ page: '1', status: 'finalizado', order: 'default' });
+      return true;
+    }
+
+    const onlySearchAndPage = params.keys.length === 2 && params.has('page');
+
+    if (params.has('search') && !onlySearchAndPage) {
+      this.replaceQueryParams({
+        search: params.get('search'),
+        page: params.get('page') ?? '1',
+      });
+      return true;
+    }
+
+    return false;
+  }
+
+  private replaceQueryParams(queryParams: Params): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      replaceUrl: true,
+    });
+  }
+
+  private updateUrl(queryParams: Params): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { ...queryParams, search: null },
+      queryParamsHandling: 'merge',
+    });
   }
 }

@@ -1,16 +1,20 @@
-@if (loading()) {
-  <app-spinner></app-spinner>
-} @else {
+@if (episodeList(); as list) {
   <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4">
-    @for (episode of episodeList(); track $index) {
+    @for (episode of list; track episode.slug + episode.number) {
       <div class="card bg-anime-navy rounded-2xl overflow-hidden w-full shrink-0">
         <episode-card
           [episodeNumber]="episode.number"
           [cover]="episode.cover"
           [title]="episode.title"
           [slug]="episode.slug"
-        ></episode-card>
+        />
       </div>
+    } @empty {
+      <p class="col-span-full py-8 text-center text-anime-text">No hay episodios recientes.</p>
     }
   </div>
+} @else if (loadError()) {
+  <app-error-message message="No se pudieron cargar los episodios" />
+} @else {
+  <app-spinner />
 }

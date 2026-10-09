@@ -1,38 +1,34 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { MediaItem } from '@core/models/MediaCatalogResp.interface';
+
+import { catchError, map, of } from 'rxjs';
 
 import { AnimeService } from '@services/anime.service';
+import { ErrorMessage } from '@shared/components/error-message/error-message';
 import { Spinner } from '@shared/components/spinner/spinner';
-
 
 @Component({
   selector: 'on-air-list',
-  imports: [RouterLink, Spinner],
+  imports: [RouterLink, Spinner, ErrorMessage],
   templateUrl: './on-air-list.html',
 })
-export class OnAirList implements OnInit {
+
+export class OnAirList {
 
   private readonly animeService = inject(AnimeService);
 
-  animeList = signal<MediaItem[]>([]);
+  readonly loadError = signal(false);
 
-  loading = signal(true);
-
-  ngOnInit(): void {
-    this.loadAnimes();
-  }
-
-  loadAnimes() {
-    this.animeService.getAnimesOnAiring().subscribe({
-      next: (response) => {
-        this.animeList.set(response.data.media);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.loading.set(false);
-      }
-    })
-  }
-
+  readonly animeList = toSignal(
+    this.animeService.getAnimesOnAiring().pipe(
+      map((resp) => resp.data.media),
+      catchError((err) => {
+        console.error(err);
+        this.loadError.set(true);
+        return of(null);
+      }),
+    ),
+    { initialValue: null },
+  );
 }

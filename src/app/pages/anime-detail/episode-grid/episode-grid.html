@@ -1,0 +1,18 @@
+<div
+  class="max-h-105 lg:max-h-155 overflow-y-auto rounded-xl border border-anime-button/30 bg-anime-main-background/60"
+>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4">
+    @for (item of episodes(); track item.number) {
+      <div class="card bg-anime-navy rounded-2xl overflow-hidden w-full shrink-0">
+        <episode-card
+          [episodeNumber]="item.number"
+          [cover]="item.number | addCoverEpisode : animeCover()"
+          [url]="item.url"
+          [slug]="item.slug"
+        />
+      </div>
+    } @empty {
+      <p class="col-span-full py-8 text-center text-anime-text">No se encontraron episodios.</p>
+    }
+  </div>
+</div>

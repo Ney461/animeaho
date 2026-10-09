@@ -7,6 +7,7 @@ import { environment } from '@environments/environment';
 import { MediaCatalogResp } from '@core/models/MediaCatalogResp.interface';
 import { LatestEpisodesResp } from '@core/models/LatestEpisodesResp.interface';
 import { AnimeDetailResp } from '@core/models/AnimeDetailResp.interface';
+import { EpisodeDataResp } from '@core/models/EpisodeDataResp.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AnimeService {
@@ -52,5 +53,9 @@ export class AnimeService {
     return this.httpClient.get<MediaCatalogResp>(`${this.apiUrl}/search`, {
       params: { query: text, page },
     });
+  }
+
+  searchEpisode(slug: string, episode: number ): Observable<EpisodeDataResp> {
+    return this.httpClient.get<EpisodeDataResp>(`${this.apiUrl}/anime/${slug}/${episode}`)
   }
 }

@@ -1,1 +1,11 @@
-<p>episode-player works!</p>,
+@if (episodeData(); as episode) {
+  <!-- aquí el reproductor -->
+} @else if (loadError()) {
+  <div class="flex flex-1 items-center justify-center">
+    <p class="font-title text-2xl">No se pudo cargar el episodio.</p>
+  </div>
+} @else {
+  <div class="flex flex-1 items-center justify-center">
+    <app-spinner />
+  </div>
+}

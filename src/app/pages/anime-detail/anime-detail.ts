@@ -7,18 +7,20 @@ import { Observable, catchError, filter, map, of, startWith, switchMap } from 'r
 import { AnimeDetailData } from '@core/models/AnimeDetailResp.interface';
 import { AnimeService } from '@services/anime.service';
 import { Spinner } from '@shared/components/spinner/spinner';
-import { EpisodeCard } from '@shared/components/episode-card/episode-card';
+import { ErrorMessage } from '@shared/components/error-message/error-message';
 
 import { AnimeSidebar } from './anime-sidebar/anime-sidebar';
 import { AnimeInfo } from './anime-info/anime-info';
 import { AnimeTimeline } from './anime-timeline/anime-timeline';
 import { EpisodeToolbar } from './episode-toolbar/episode-toolbar';
-import { AddCoverEpisodePipe } from './pipes/addCoverEpisode.pipe';
+import { EpisodeGrid } from './episode-grid/episode-grid';
 
 @Component({
   selector: 'anime-detail',
-  imports: [Spinner, AnimeSidebar, AnimeInfo, AnimeTimeline, EpisodeToolbar, EpisodeCard, AddCoverEpisodePipe],
+  imports: [Spinner, AnimeSidebar, AnimeInfo, AnimeTimeline, EpisodeToolbar, EpisodeGrid, ErrorMessage],
   templateUrl: './anime-detail.html',
+  host: { class: 'flex flex-1 flex-col' },
+
 })
 export class AnimeDetail {
   private readonly route = inject(ActivatedRoute);
@@ -27,6 +29,7 @@ export class AnimeDetail {
   readonly loadError = signal(false);
   readonly descending = signal(false);
   readonly episodeQuery = signal('');
+
 
   readonly animeData = toSignal<AnimeDetailData | null>(
     this.route.paramMap.pipe(

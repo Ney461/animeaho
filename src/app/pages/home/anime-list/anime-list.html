@@ -1,11 +1,24 @@
-@if (loading()) {
-  <app-spinner></app-spinner>
-}@else {
+@if (animeList(); as list) {
+
   <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4">
-    @for (anime of animeList(); track $index) {
+
+    @for (anime of animeList(); track anime.slug) {
       <div class="card bg-anime-navy rounded-2xl overflow-hidden w-full shrink-0">
         <anime-card [anime]="anime"></anime-card>
       </div>
     }
+
+    @empty {
+      <p class="px-4 py-2 text-anime-text">No hay animes en emisión.</p>
+    }
+
   </div>
+}
+
+@else if (loadError()) {
+  <app-error-message message="No se pudieron cargar los animes" />
+}
+
+@else {
+  <app-spinner />
 }
