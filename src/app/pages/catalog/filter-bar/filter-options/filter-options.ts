@@ -1,7 +1,8 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, forwardRef, input, output, signal } from '@angular/core';
+import { Component, computed, forwardRef, input, output, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FilterOption } from '@core/constants/option-labels';
+import { SelectionIndicator } from '../selection-indicator/selection-indicator';
 
 @Component({
   selector: 'filter-options',
@@ -16,7 +17,7 @@ import { FilterOption } from '@core/constants/option-labels';
       multi: true
     },
   ],
-  imports: [NgClass, NgTemplateOutlet],
+  imports: [NgClass, NgTemplateOutlet, SelectionIndicator],
 })
 
 export class FilterOptions implements ControlValueAccessor {
@@ -32,6 +33,12 @@ export class FilterOptions implements ControlValueAccessor {
 
   value = signal<string[] | string | null>(null);
   disabled = signal(false);
+  selectionCount = computed(() => {
+    const value = this.value();
+    return this.isMulti()
+      ? Array.isArray(value) ? value.length : 0
+      : typeof value === 'string' && value.length > 0 ? 1 : 0;
+  });
 
   private isMulti(): boolean {
     return this.filterLabel() !== 'Estado' && this.filterLabel() !== 'Orden';

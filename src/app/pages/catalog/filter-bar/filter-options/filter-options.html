@@ -3,9 +3,11 @@
     <div
       tabindex="0"
       role="button"
-      class="btn btn-sm w-full bg-anime-options [.dropdown:focus-within_&]:bg-anime-button-active"
+      class="btn btn-sm w-full bg-anime-options [.dropdown:focus-within_&]:bg-anime-button-active justify-between"
     >
-      {{ filterLabel() }}
+      <selection-indicator class="min-w-0 flex-1" [count]="selectionCount()">
+        {{ filterLabel() }}
+      </selection-indicator>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="1em"
@@ -41,7 +43,11 @@
       [checked]="expanded()"
       (change)="onExpansionChange($event)"
     />
-    <div class="collapse-title font-semibold">{{ filterLabel() }}</div>
+    <div class="collapse-title font-semibold">
+      <selection-indicator [count]="selectionCount()">
+        {{ filterLabel() }}
+      </selection-indicator>
+    </div>
     <div class="collapse-content">
       @if (filterLabel() == 'Estado' || filterLabel() == 'Orden') {
         <ng-container *ngTemplateOutlet="onlyOptionList"></ng-container>

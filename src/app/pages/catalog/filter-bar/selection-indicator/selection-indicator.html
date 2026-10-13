@@ -1,0 +1,8 @@
+<div class="flex w-full min-w-0 items-center gap-2">
+  <span class="min-w-0 flex-1 truncate">
+    <ng-content />
+  </span>
+  @if (count() > 0) {
+    <span class="filter-selection-badge badge shrink-0 border-0 bg-anime-badge text-white">{{ count() }}</span>
+  }
+</div>
