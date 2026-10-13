@@ -1,0 +1,31 @@
+<div class="w-full">
+  @if (selected(); as embed) {
+    @for (e of [embed]; track e.url) {
+      <iframe class="w-full aspect-video" [src]="e.url | safeUrl" allowfullscreen></iframe>
+    }
+  }
+
+  @for (type of types(); track type) {
+    <div class="flex items-center justify-center my-2 bg-anime-surface rounded-xl">
+      <div role="tablist" class="tabs tabs-lift w-full flex items-center">
+        <span class="badge badge-info shrink-0 self-center text-white font-title font-semibold mx-2">
+          {{ type }}
+        </span>
+
+        @for (item of grouped()[type]; track item.url) {
+          <button
+            role="tab"
+            class="tab flex-1 font-semibold"
+            [class.bg-anime-button-active]="selected() === item"
+            [class.text-white]="selected() === item"
+            [class.bg-anime-surface]="selected() !== item"
+            [class.text-anime-text]="selected() !== item"
+            (click)="select(item)"
+          >
+            {{ item.name }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

@@ -1,1 +1,51 @@
-<p>episode-navigation works!</p>,
+<div class="bg-anime-surface rounded-xl flex w-full">
+  <a
+    [class.btn-disabled]="!hasPrev()"
+    class="rounded-l-xl flex-1 btn bg-anime-button"
+    [routerLink]="['/episode', slug(), currentNumber() - 1]"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="currentColor"
+    >
+      <path d="M360-200 80-480l280-280 56 56-183 184h647v80H233l184 184-57 56Z" />
+    </svg>
+
+    <span>Anterior</span>
+  </a>
+  <a class="flex-1 btn bg-anime-button" [routerLink]="['/anime', slug()]">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="currentColor"
+    >
+      <path
+        d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"
+      />
+    </svg>
+
+    <span>Anime</span>
+  </a>
+  <a
+    [class.btn-disabled]="!hasNext()"
+    class="rounded-r-xl flex-1 btn bg-anime-button"
+    [routerLink]="['/episode', slug(), currentNumber() + 1]"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="currentColor"
+    >
+      <path d="m600-200-57-56 184-184H80v-80h647L544-704l56-56 280 280-280 280Z" />
+    </svg>
+
+    <span>Siguiente</span>
+  </a>
+</div>

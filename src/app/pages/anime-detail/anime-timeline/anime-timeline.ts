@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { AnimeRelated } from '@core/models/AnimeDetailResp.interface';
 import { RouterLink } from '@angular/router';
 import { ImageFallbackPipe } from '@shared/pipes/image-fallback.pipe';
@@ -11,5 +11,8 @@ import { ImageFallbackPipe } from '@shared/pipes/image-fallback.pipe';
 export class AnimeTimeline {
 
   related = input.required<AnimeRelated[]>()
+  hasRelated = computed(() => {
+    return this.related().length > 0 ? true : false
+  })
 
 }

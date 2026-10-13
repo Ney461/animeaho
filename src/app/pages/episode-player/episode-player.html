@@ -1,11 +1,14 @@
-@if (episodeData(); as episode) {
-  <!-- aquí el reproductor -->
-} @else if (loadError()) {
-  <div class="flex flex-1 items-center justify-center">
-    <p class="font-title text-2xl">No se pudo cargar el episodio.</p>
-  </div>
+@if (loadError()) {
+  <app-error-message message="No se pudo cargar el episodio." />
 } @else {
-  <div class="flex flex-1 items-center justify-center">
-    <app-spinner />
+  <div class="mx-auto w-full max-w-4xl">
+    @if (episodeData(); as episode) {
+      <p class="font-title text-2xl py-4 text-center">{{ episode.data.title }}</p>
+      <server-selector [embeds]="episode.data.embeds" />
+    } @else {
+      <app-spinner />
+    }
+
+    <episode-navigation [currentNumber]="number()" [slug]="slug()" />
   </div>
 }
