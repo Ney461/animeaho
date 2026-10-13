@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, model, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Observable, catchError, map, of, switchMap, timer } from 'rxjs';
@@ -22,7 +22,42 @@ export class SearchBar {
   private readonly animeService = inject(AnimeService);
   private readonly router = inject(Router);
 
-  readonly query = signal('');
+  readonly query = model('');
+  private readonly dropdownDismissed = signal(false);
+
+  readonly cleanSearch = computed(() => this.query().trim() !== '');
+  readonly showResultsDropdown = computed(
+    () =>
+      !this.dropdownDismissed() &&
+      this.query().trim().length > 0 &&
+      this.results().length > 0,
+  );
+  readonly showNoResults = computed(
+    () => !this.dropdownDismissed() && this.noResults(),
+  );
+
+  @HostListener('document:click', ['$event'])
+  dismissDropdownOnOutsideClick(event: MouseEvent): void {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    if (target.closest('search-dropdown, .search-action')) {
+      return;
+    }
+
+    this.dropdownDismissed.set(true);
+  }
+
+  onQueryInput(event: Event): void {
+    this.query.set((event.target as HTMLInputElement).value);
+    this.dropdownDismissed.set(false);
+  }
+
+  clear() {
+    this.query.set('')
+  }
 
   private readonly response = toSignal<AnimeSearchResponse | null>(
     toObservable(this.query).pipe(
